@@ -13,6 +13,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: "^0.2.0"
+  shared_preferences: "^0.3.3"
+  dson: "^0.13.0"
 
 flutter_icons:
   image_path: "images/icon.png"
@@ -34,6 +36,9 @@ flutter:
    - images/logo.png
    - images/icon-transparent.png
    - images/icon-transparent-small.png
+   - images/icon-small.png
+   - images/pattern-box.png
+   - images/pattern-box-transparent.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

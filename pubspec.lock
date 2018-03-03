@@ -50,6 +50,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.10.0+2"
+  build:
+    dependency: transitive
+    description:
+      name: build
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.12.0+1"
+  built_mirrors_core:
+    dependency: transitive
+    description:
+      name: built_mirrors_core
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.8.3+1"
   charcode:
     dependency: transitive
     description:
@@ -106,6 +120,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.5.0"
+  dart_style:
+    dependency: transitive
+    description:
+      name: dart_style
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.9+1"
+  dson:
+    dependency: "direct dev"
+    description:
+      name: dson
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.13.0"
+  dson_core:
+    dependency: transitive
+    description:
+      name: dson_core
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.13.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -305,6 +340,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.28.0"
+  serializable_core:
+    dependency: transitive
+    description:
+      name: serializable_core
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.1"
+  shared_preferences:
+    dependency: "direct dev"
+    description:
+      name: shared_preferences
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.3"
   shelf:
     dependency: transitive
     description:
@@ -338,6 +387,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  source_gen:
+    dependency: transitive
+    description:
+      name: source_gen
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.5+1"
   source_map_stack_trace:
     dependency: transitive
     description:

@@ -1,5 +1,7 @@
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
 
 void main() => runApp(new Uploader());
 
@@ -24,6 +26,8 @@ class UserData {
 }
 
 class LoginState extends State<Login> {
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   UserData user = new UserData();
@@ -59,6 +63,7 @@ class LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
@@ -75,15 +80,13 @@ class LoginState extends State<Login> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                new Image.asset('images/icon-transparent-small.png', width: 100.0),
-
+                new Image.asset('images/icon-small.png', width: 100.0),
                 new TextFormField(
                   decoration: const InputDecoration(
                     icon: const Icon(Icons.email),
-                    hintText: 'Email Address',
+                    hintText: 'Your email Address',
                     labelText: 'E-mail',
                   ),
-                  autofocus: true,
                   keyboardType: TextInputType.emailAddress,
                   onSaved: (String value) { user.email = value; },
                   validator: _validateEmail,
@@ -91,13 +94,14 @@ class LoginState extends State<Login> {
                 new TextFormField(
                   decoration: const InputDecoration(
                     icon: const Icon(Icons.lock),
-                    hintText: 'Password',
-                    labelText: 'Your Password',
+                    hintText: 'Your Password',
+                    labelText: 'Password',
                   ),
                   obscureText: true,
                   onSaved: (String value) { user.password = value; },
                   validator: _validatePassword,
                 ),
+
                 new Container(
                   padding: const EdgeInsets.all(20.0),
                   alignment: Alignment.center,
