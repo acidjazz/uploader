@@ -39,6 +39,7 @@ flutter:
    - images/icon-small.png
    - images/pattern-box.png
    - images/pattern-box-transparent.png
+   - images/avatar.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
