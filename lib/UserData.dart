@@ -3,7 +3,6 @@ library singleton;
 
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:io' show sleep;
 
 class UserData {
 
@@ -24,15 +23,16 @@ class UserData {
       this.password = prefs.getString('password');
     }
 
+    await new Future.delayed(const Duration(seconds: 3));
     return true;
 
   }
 
-  save () async {
+  Future<bool> save () async {
     final SharedPreferences prefs = await _prefs;
     prefs.setString('email', this.email);
     prefs.setString('password', this.password);
-    sleep(const Duration(seconds: 3));
+    await new Future.delayed(const Duration(seconds: 3));
     return true;
   }
 
@@ -42,7 +42,7 @@ class UserData {
     prefs.remove('password');
     this.email = '';
     this.password = '';
-
+    await new Future.delayed(const Duration(seconds: 3));
     return true;
   }
 }

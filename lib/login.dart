@@ -1,3 +1,4 @@
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'UserData.dart';
@@ -17,25 +18,22 @@ class LoginState extends State<Login> {
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState.showSnackBar(new SnackBar(
-        content: new Text(value)
+        content: new Text(value),
+        duration: const Duration(seconds: 3),
     ));
-  }
-
-  void _login() {
-    showInSnackBar('Loggin In..');
-    final FormState form = _formKey.currentState;
-    form.save();
-    user.save().then((result) => Navigator.of(context).pushReplacementNamed('/home'));
   }
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
-  void _handleSubmitted() {
+  Future _handleSubmitted() async {
     final FormState form = _formKey.currentState;
     if (!form.validate()) {
       showInSnackBar('Please complete the login form');
     } else {
-      _login();
+      showInSnackBar('Loggin In..');
+      form.save();
+      await user.save();
+      Navigator.of(context).pushReplacementNamed('/home');
     }
   }
 
