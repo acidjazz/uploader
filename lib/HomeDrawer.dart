@@ -1,19 +1,24 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'UserData.dart' show user;
 
 class HomeDrawer extends StatelessWidget {
 
-  bool _logOut () {
-    Navigator.pop(context);
-    showInSnackBar('Logging out..');
-    user.reset().then((result) =>
-      Navigator.of(context).pushReplacementNamed('/login'));
+  String routeName;
+  HomeDrawer(this.routeName);
+
+  Future<bool> _logOut (BuildContext context) async {
+    var nav = Navigator.of(context);
+    nav.pop();
+    showInSnackBar(context, 'Logging out..');
+    await user.reset();
+    nav.pushReplacementNamed('/login');
     return true;
   }
 
-
-  void showInSnackBar(String value) {
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+  void showInSnackBar(BuildContext context, String value) {
+    Scaffold.of(context).showSnackBar(new SnackBar(
       content: new Text(value),
       duration: const Duration(seconds: 3),
     ));
@@ -32,13 +37,20 @@ class HomeDrawer extends StatelessWidget {
             ),
             new ListTile(
               leading: const Icon(Icons.exit_to_app),
-              title: const Text('Logout'),
-              onTap: _logOut,
+              title: new Text('Sign Out'),
+              onTap: () => _logOut(context),
+            ),
+            new ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text('Home'),
+              onTap: () => Navigator.pushNamed(context, '/home'),
+              selected: this.routeName == '/home',
             ),
             new ListTile(
               leading: const Icon(Icons.shopping_cart),
               title: const Text('Inventory'),
               onTap: () => Navigator.pushNamed(context, '/inventory'),
+              selected: this.routeName == '/inventory',
             ),
           ],
         ),

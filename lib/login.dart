@@ -56,6 +56,7 @@ class LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+
     init();
 
     if (_loadedInitials) {

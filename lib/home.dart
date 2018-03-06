@@ -17,7 +17,7 @@ class HomeState extends State<Home> {
       key: _scaffoldKey,
       appBar: new AppBar(title: new Text('Maxanet Uploader')),
       body: new Center(child: new Text('Home Screen')),
-      drawer: new HomeDrawer(),
+      drawer: new HomeDrawer('/home'),
     );
   }
 

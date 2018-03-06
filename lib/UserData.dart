@@ -42,7 +42,7 @@ class UserData {
     prefs.remove('password');
     this.email = '';
     this.password = '';
-    await new Future.delayed(const Duration(seconds: 1));
+    await new Future.delayed(const Duration(seconds: 2));
     return true;
   }
 }
