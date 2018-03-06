@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'inventory.dart';
 import 'login.dart';
 import 'home.dart';
 
@@ -13,6 +14,7 @@ class Uploader extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         '/home': (BuildContext context) => new Home(),
         '/login': (BuildContext context) => new Login(),
+        '/inventory': (BuildContext context) => new Inventory(),
       },
     );
   }

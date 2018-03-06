@@ -23,7 +23,7 @@ class UserData {
       this.password = prefs.getString('password');
     }
 
-    await new Future.delayed(const Duration(seconds: 3));
+    await new Future.delayed(const Duration(seconds: 1));
     return true;
 
   }
@@ -32,7 +32,7 @@ class UserData {
     final SharedPreferences prefs = await _prefs;
     prefs.setString('email', this.email);
     prefs.setString('password', this.password);
-    await new Future.delayed(const Duration(seconds: 3));
+    await new Future.delayed(const Duration(seconds: 1));
     return true;
   }
 
@@ -42,7 +42,7 @@ class UserData {
     prefs.remove('password');
     this.email = '';
     this.password = '';
-    await new Future.delayed(const Duration(seconds: 3));
+    await new Future.delayed(const Duration(seconds: 1));
     return true;
   }
 }
