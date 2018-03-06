@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../HomeDrawer.dart';
 import '../InventoryData.dart';
+import 'inventoryModify.dart';
 
 class Inventory extends StatefulWidget {
   @override
@@ -17,8 +18,13 @@ class InventoryState extends State<Inventory> {
     }
   }
 
-  _addInventoryRoute () {
-
+  _toInventoryModify ([id = false]) {
+    Navigator.of(context).push(
+      new MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (context) => new InventoryModify(id)
+      )
+    );
   }
 
   @override
@@ -30,7 +36,7 @@ class InventoryState extends State<Inventory> {
       floatingActionButton: new FloatingActionButton(
         tooltip: 'Add',
         child: new Icon(Icons.add),
-        onPressed: _addInventoryRoute,
+        onPressed: _toInventoryModify,
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'pages/inventory.dart';
-import 'pages/login.dart';
-import 'pages/home.dart';
+import 'pages/inventory.dart' show Inventory;
+import 'pages/login.dart' show Login;
+import 'pages/home.dart' show Home;
 
 void main() => runApp(new Uploader());
 
