@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'HomeDrawer.dart';
-import 'InventoryData.dart';
+import '../HomeDrawer.dart';
+import '../InventoryData.dart';
 
 class Inventory extends StatefulWidget {
   @override

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'UserData.dart';
+import '../UserData.dart';
 
 class Login extends StatefulWidget {
   @override
