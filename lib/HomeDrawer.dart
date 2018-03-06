@@ -30,7 +30,7 @@ class HomeDrawer extends StatelessWidget {
        child: new Column(
           children: <Widget>[
             new UserAccountsDrawerHeader(
-              accountName: new Text('FirstN LastN'),
+              accountName: new Text('firstName lastName'),
               accountEmail: new Text(user.email),
               currentAccountPicture: const CircleAvatar(
                 backgroundImage: const AssetImage('images/avatar.png'),
