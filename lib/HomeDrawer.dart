@@ -9,11 +9,11 @@ class HomeDrawer extends StatelessWidget {
   HomeDrawer(this.routeName);
 
   Future<bool> _logOut (BuildContext context) async {
-    var nav = Navigator.of(context);
+    final nav = Navigator.of(context);
     nav.pop();
     showInSnackBar(context, 'Logging out..');
     await user.reset();
-    nav.pushReplacementNamed('/login');
+    nav.pushNamedAndRemoveUntil('/login', (v) => false);
     return true;
   }
 
@@ -30,6 +30,7 @@ class HomeDrawer extends StatelessWidget {
        child: new Column(
           children: <Widget>[
             new UserAccountsDrawerHeader(
+              accountName: new Text('FirstN LastN'),
               accountEmail: new Text(user.email),
               currentAccountPicture: const CircleAvatar(
                 backgroundImage: const AssetImage('images/avatar.png'),
