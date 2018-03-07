@@ -31,7 +31,6 @@ class InventoryModifyState extends State<InventoryModify> {
   void showInSnackBar(String value) {
     _scaffoldKey.currentState.showSnackBar(new SnackBar(
       content: new Text(value),
-      duration: const Duration(seconds: 3),
     ));
   }
 
@@ -40,8 +39,8 @@ class InventoryModifyState extends State<InventoryModify> {
     var _file = await ImagePicker.pickImage(source: ImageSource.askUser);
     setState(() { this.photos.add(_file); });
 
-    await new Future.delayed(const Duration(seconds: 1), () => "1");
-    showInSnackBar('Photo added');
+    await new Future.delayed(const Duration(milliseconds: 300), () => "1");
+    // showInSnackBar('Photo added');
     _gridController.animateTo(
       _gridController.position.maxScrollExtent,
       duration: const Duration(milliseconds: 300),
@@ -61,7 +60,7 @@ class InventoryModifyState extends State<InventoryModify> {
       onTap: () { addPhoto(); },
       child: new GridTile(
         child: new Container(
-          child: new Icon(Icons.add_a_photo, size: 60.0, color: Colors.blue),
+          child: new Icon(Icons.add_a_photo, size: 30.0, color: Colors.blue),
             decoration: new BoxDecoration(
               border: new Border.all(width: 1.0, color: Colors.blue),
               borderRadius: new BorderRadius.all(new Radius.circular(1.0)),
@@ -76,18 +75,23 @@ class InventoryModifyState extends State<InventoryModify> {
   }
 
   List<Widget> photosWidget () {
-    var photos = [ addPhotosWidget() ];
-    photos.addAll(this.photos.map((File photo) {
+   var photos = this.photos.map((File photo) {
       return new GridTile(
         header: new GestureDetector(
           onTap: () { removePhoto(photo); },
           child: new GridTileBar(
-            leading: new Icon(Icons.delete),
+            leading: new Container(
+              decoration: new BoxDecoration(
+                color: Colors.white30
+              ),
+              child: new Icon(Icons.delete, color: Colors.blue),
+            ),
           ),
         ),
         child: new Image.file(photo, fit: BoxFit.cover),
       );
-    }).toList());
+    }).toList();
+    photos.add(addPhotosWidget());
     return photos;
   }
 
@@ -114,8 +118,9 @@ class InventoryModifyState extends State<InventoryModify> {
           key: _formKey,
           child: new Container(
             padding: new EdgeInsets.symmetric(horizontal: 30.0, vertical: 30.0),
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: new ListView(
+              reverse: true,
+              shrinkWrap: true,
               children: <Widget>[
 
                 new Container(
@@ -131,7 +136,6 @@ class InventoryModifyState extends State<InventoryModify> {
                     childAspectRatio: (orientation == Orientation.portrait) ? 1.0 : 1.3,
                     children: photosWidget()
                   ),
-
                 ),
 
                 new TextFormField(
@@ -151,7 +155,15 @@ class InventoryModifyState extends State<InventoryModify> {
                   maxLines: null,
                 ),
 
-              ],
+                new TextFormField(
+                  decoration: const InputDecoration(
+                    icon: const Icon(Icons.label),
+                    hintText: 'Item Category ',
+                    labelText: 'Category',
+                  ),
+                ),
+
+              ].reversed.toList(),
             ),
           ),
         ),

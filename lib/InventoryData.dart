@@ -1,11 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InventoryData {
 
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  List<Object> Inventory = new List();
-
+  List<InventoryItem> inventory;
 
   static final InventoryData _singleton = new InventoryData._internal();
   InventoryData._internal();
@@ -16,6 +16,15 @@ class InventoryData {
     // serialize our complex array
     return true;
   }
+
+}
+
+class InventoryItem {
+
+  List<File> photos;
+  String name;
+  String desription;
+  String cateogry;
 
 }
 
