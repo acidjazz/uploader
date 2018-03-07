@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -23,29 +24,80 @@ class InventoryModifyState extends State<InventoryModify> {
 
   List<File> photos = new List();
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  ScrollController _gridController = new ScrollController();
 
-  choosePhotos () async {
-    var _file = await ImagePicker.pickImage();
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+      content: new Text(value),
+      duration: const Duration(seconds: 3),
+    ));
+  }
+
+  addPhoto () async {
+
+    var _file = await ImagePicker.pickImage(source: ImageSource.askUser);
+    setState(() { this.photos.add(_file); });
+
+    await new Future.delayed(const Duration(seconds: 1), () => "1");
+    showInSnackBar('Photo added');
+    _gridController.animateTo(
+      _gridController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+  }
+
+  removePhoto (photo) {
     setState(() {
-      this.photos.add(_file);
-      print('PHOTO PATH');
-      print(this.photos.first.path);
+      this.photos.remove(photo);
     });
+    showInSnackBar('Photo removed');
+  }
+
+  Widget addPhotosWidget () {
+    return new GestureDetector(
+      onTap: () { addPhoto(); },
+      child: new GridTile(
+        child: new Container(
+          child: new Icon(Icons.add_a_photo, size: 60.0, color: Colors.blue),
+            decoration: new BoxDecoration(
+              border: new Border.all(width: 1.0, color: Colors.blue),
+              borderRadius: new BorderRadius.all(new Radius.circular(1.0)),
+              color: Colors.white,
+              boxShadow: [
+                new BoxShadow(color: Colors.blue, blurRadius: 3.0)
+              ],
+          ),
+        ),
+      ),
+    );
   }
 
   List<Widget> photosWidget () {
-    return this.photos.map((File photo) {
-      return new Container(
-        padding: new EdgeInsets.symmetric(horizontal: 10.0),
-        child: new Image.file(photo, width: 100.0),
+    var photos = [ addPhotosWidget() ];
+    photos.addAll(this.photos.map((File photo) {
+      return new GridTile(
+        header: new GestureDetector(
+          onTap: () { removePhoto(photo); },
+          child: new GridTileBar(
+            leading: new Icon(Icons.delete),
+          ),
+        ),
+        child: new Image.file(photo, fit: BoxFit.cover),
       );
-    }).toList();
+    }).toList());
+    return photos;
   }
 
   @override
   Widget build(BuildContext context) {
+
+    final Orientation orientation = MediaQuery.of(context).orientation;
+
     return new Scaffold(
+      key: _scaffoldKey,
       appBar: new AppBar(
         backgroundColor: Colors.grey,
         title: new Text(widget.id ? widget.titleEdit : widget.titleNew),
@@ -66,22 +118,20 @@ class InventoryModifyState extends State<InventoryModify> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
 
-                new RaisedButton(
-                  onPressed: choosePhotos,
-                  child: new Text('Add Photos'),
-                  color: Colors.blue,
-                  textColor: Colors.white,
-                ),
-
                 new Container(
                   padding: new EdgeInsets.symmetric(vertical: 20.0),
-                  height: MediaQuery.of(context).size.height*0.2,
-                  child: new ListView(
+                  height: MediaQuery.of(context).size.height*0.3,
+                  child: new GridView.count(
+                    controller: _gridController,
+                    crossAxisCount: 1,
                     scrollDirection: Axis.horizontal,
-                    children: photos.length == 0
-                      ? [ new Text('No image selected yet') ]
-                      : photosWidget()
+                    mainAxisSpacing: 4.0,
+                    crossAxisSpacing: 4.0,
+                    padding: const EdgeInsets.all(4.0),
+                    childAspectRatio: (orientation == Orientation.portrait) ? 1.0 : 1.3,
+                    children: photosWidget()
                   ),
+
                 ),
 
                 new TextFormField(
