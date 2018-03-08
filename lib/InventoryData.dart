@@ -32,20 +32,20 @@ class InventoryData {
   itemsToJson() {
     return inventory.items.map((InventoryItem item) {
       return item.toJson();
-    }).toList();
+    }).toList(growable: true);
   }
 
   jsonToItems(items) {
     return items.map((item) {
       return new InventoryItem.fromJson(item);
-    }).toList();
+    }).toList(growable: true);
   }
 
 }
 
 class InventoryItem extends JsonDecoder {
 
-  List<String> photos;
+  List<String> photos = <String>[];
   String name;
   String description;
   String category;
@@ -56,13 +56,13 @@ class InventoryItem extends JsonDecoder {
     : name = json['name'],
       description = json['description'],
       category = json['category'],
-      photos = json['photos'];
+      photos = json['photos'].toList();
 
   Map<String, dynamic> toJson() =>
     {
       'name': name,
       'description': description,
-      'cateogry': category,
+      'category': category,
       'photos': photos,
     };
 }

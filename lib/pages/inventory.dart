@@ -37,17 +37,26 @@ class InventoryState extends State<Inventory> {
         return new ListTile(
           title: new Text(item.name),
           subtitle: new Text(item.description),
+          onTap: () { _toInventoryModify(inventory.items.indexOf(item), item); },
         );
       }).toList(),
     );
   }
 
-
-  _toInventoryModify ([id = false]) {
+  _toInventoryModify (int index, InventoryItem item) {
     Navigator.of(context).push(
       new MaterialPageRoute(
         fullscreenDialog: true,
-        builder: (context) => new InventoryModify(id)
+        builder: (context) => new InventoryModify(index, item)
+      )
+    );
+  }
+
+  _toInventoryCreate () {
+    Navigator.of(context).push(
+      new MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (context) => new InventoryModify(null, null),
       )
     );
   }
@@ -64,7 +73,7 @@ class InventoryState extends State<Inventory> {
       floatingActionButton: new FloatingActionButton(
         tooltip: 'Add',
         child: new Icon(Icons.add),
-        onPressed: _toInventoryModify,
+        onPressed: _toInventoryCreate,
       ),
     );
   }

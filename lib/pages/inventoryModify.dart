@@ -5,9 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../InventoryData.dart';
 
+enum Mode { Create, Edit }
+
 class InventoryModify extends StatefulWidget {
-  var id = false;
-  InventoryModify(this.id);
+
+  final index;
+  final item;
+
+  InventoryModify(this.index, this.item);
 
   final String titleNew = 'Adding Inventory';
   final String titleEdit = 'Modifying inventory';
@@ -19,8 +24,9 @@ class InventoryModify extends StatefulWidget {
 
 class InventoryModifyState extends State<InventoryModify> {
 
-  InventoryItem item = new InventoryItem();
-  List<String> photos = new List();
+  Mode get mode => widget.index == null ? Mode.Create : Mode.Edit;
+  InventoryItem _item;
+  InventoryItem get item => _item ??= (widget.index == null ? new InventoryItem() : widget.item);
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
@@ -35,7 +41,8 @@ class InventoryModifyState extends State<InventoryModify> {
   addPhoto () async {
 
     var _file = await ImagePicker.pickImage(source: ImageSource.askUser);
-    setState(() { this.photos.add(_file.path); });
+
+    setState(() { item.photos.add(_file.path); });
 
     await new Future.delayed(const Duration(milliseconds: 300), () => "1");
     _gridController.animateTo(
@@ -46,9 +53,7 @@ class InventoryModifyState extends State<InventoryModify> {
   }
 
   removePhoto (photo) {
-    setState(() {
-      this.photos.remove(photo);
-    });
+    setState(() { item.photos.remove(photo); });
     showInSnackBar('Photo removed');
   }
 
@@ -59,7 +64,7 @@ class InventoryModifyState extends State<InventoryModify> {
   }
 
   String _validatePhotos() {
-    if (photos.length < 1)
+    if (item.photos.length < 1)
       return 'Please select at least one photo';
     return null;
   }
@@ -74,12 +79,22 @@ class InventoryModifyState extends State<InventoryModify> {
       showInSnackBar(_validatePhotos());
     } else {
       showInSnackBar('Saving new inventory');
-      item.photos = photos;
-      inventory.items.add(item);
+      if (mode == Mode.Create) {
+        inventory.items.add(item);
+      } else {
+        inventory.items[widget.index] = item;
+      }
       await inventory.save();
+      Navigator.pop(context);
     }
   }
 
+  void _remove (choice) async {
+    showInSnackBar('Removing Item..');
+    inventory.items.remove(item);
+    await inventory.save();
+    Navigator.pop(context);
+  }
 
   Widget addPhotosWidget () {
     return new GestureDetector(
@@ -88,12 +103,13 @@ class InventoryModifyState extends State<InventoryModify> {
         child: new Container(
           child: new Icon(Icons.add_a_photo, size: 30.0, color: Colors.blue),
             decoration: new BoxDecoration(
+              border: new Border.all(width: 1.0, color: Colors.blue),
               /*
               color: Colors.white,
               border: new Border.all(width: 1.0, color: Colors.blue),
               borderRadius: new BorderRadius.all(new Radius.circular(1.0)),
               boxShadow: [ new BoxShadow(color: Colors.blue, blurRadius: 3.0) ],
-              */
+              var*/
           ),
         ),
       ),
@@ -101,20 +117,28 @@ class InventoryModifyState extends State<InventoryModify> {
   }
 
   List<Widget> photosWidget () {
-   var photos = this.photos.map((String photo) {
+
+    var photos = item.photos.map((String photo) {
       return new GridTile(
         header: new GestureDetector(
           onTap: () { removePhoto(photo); },
           child: new GridTileBar(
             leading: new Container(
+              padding: new EdgeInsets.all(6.0),
               decoration: new BoxDecoration(
-                color: Colors.white30
+                borderRadius: new BorderRadius.all(new Radius.circular(1.0)),
+                color: Colors.black38
               ),
-              child: new Icon(Icons.delete, color: Colors.blue),
+              child: new Icon(Icons.delete, color: Colors.white),
             ),
           ),
         ),
-        child: new Image.file(new File(photo), fit: BoxFit.cover),
+        child: new Container(
+          child: new Image.file(new File(photo), fit: BoxFit.cover),
+          decoration: new BoxDecoration(
+            border: new Border.all(width: 1.0, color: Colors.black38),
+          ),
+        ),
       );
     }).toList();
     photos.add(addPhotosWidget());
@@ -130,11 +154,22 @@ class InventoryModifyState extends State<InventoryModify> {
       key: _scaffoldKey,
       appBar: new AppBar(
         backgroundColor: Colors.grey,
-        title: new Text(widget.id ? widget.titleEdit : widget.titleNew),
+        title: new Text(mode == Mode.Edit ? widget.titleEdit : widget.titleNew),
         actions: <Widget>[
           new FlatButton(
             onPressed: save,
             child: new Text('SAVE', style: const TextStyle(color: Colors.white)),
+          ),
+          new PopupMenuButton(
+            onSelected: _remove,
+            itemBuilder: (BuildContext context) {
+              return [
+                new PopupMenuItem (
+                  value: 'delete',
+                  child: new Text('Delete'),
+                )
+              ];
+            },
           ),
         ],
 

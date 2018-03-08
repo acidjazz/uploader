@@ -20,7 +20,6 @@ class HomeDrawer extends StatelessWidget {
   void showInSnackBar(BuildContext context, String value) {
     Scaffold.of(context).showSnackBar(new SnackBar(
       content: new Text(value),
-      duration: const Duration(seconds: 3),
     ));
   }
 
