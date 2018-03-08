@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import '../HomeDrawer.dart';
 import '../InventoryData.dart';
@@ -38,6 +40,12 @@ class InventoryState extends State<Inventory> {
           title: new Text(item.name),
           subtitle: new Text(item.description),
           onTap: () { _toInventoryModify(inventory.items.indexOf(item), item); },
+          leading: new GridTile(
+            child: new Container(
+              height: 30.0,
+              child: new Image.file(new File(item.photos.first), fit: BoxFit.cover),
+            ),
+          ),
         );
       }).toList(),
     );
@@ -67,7 +75,7 @@ class InventoryState extends State<Inventory> {
     if (!_loadedInv) loadInventory();
 
     return new Scaffold(
-      appBar: new AppBar(title: new Text('Inventory to Upload')),
+      appBar: new AppBar(title: new Text('Inventory')),
       drawer: new HomeDrawer('/inventory'),
       body: body(),
       floatingActionButton: new FloatingActionButton(

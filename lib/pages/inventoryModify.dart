@@ -14,8 +14,8 @@ class InventoryModify extends StatefulWidget {
 
   InventoryModify(this.index, this.item);
 
-  final String titleNew = 'Adding Inventory';
-  final String titleEdit = 'Modifying inventory';
+  final String titleNew = 'New Item';
+  final String titleEdit = 'Editing';
 
   @override
   InventoryModifyState createState() => new InventoryModifyState();
