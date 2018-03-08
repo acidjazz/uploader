@@ -48,15 +48,15 @@ class LoginState extends State<Login> {
     return null;
   }
 
-  void init() {
-    user.load().then((result) => setState(() { _loadedInitials = true; }));
+  void init() async {
+    await user.load();
+    setState(() { _loadedInitials = true; });
   }
-
 
   @override
   Widget build(BuildContext context) {
 
-    init();
+    if (!_loadedInitials) init();
 
     if (_loadedInitials) {
       return new Scaffold(
@@ -123,13 +123,9 @@ class LoginState extends State<Login> {
         appBar: new AppBar(
           title: new Text('Login to Maxanet'),
         ),
-        body: new SafeArea(
-          top: false,
-          bottom: false,
-          child: new Form(
-              key: _formKey,
-              child: new Center(child: new Text('Loading'))
-          ),
+        body: new Center(
+          key: _formKey,
+          child: new CircularProgressIndicator(),
         ),
       );
     }

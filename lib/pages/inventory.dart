@@ -10,13 +10,38 @@ class Inventory extends StatefulWidget {
 
 class InventoryState extends State<Inventory> {
 
-  _body () {
-    if (inventory.Inventory.length < 1) {
-      return new Center(child: new Text('You have no inventory yet'));
+  var _loadedInv = false;
+
+  loadInventory () async {
+    await inventory.load();
+    setState(() { _loadedInv = true; });
+  }
+
+  body () {
+    if (_loadedInv) {
+      if (inventory.items.length < 1) {
+        return new Center(child: new Text('You have no inventory yet'));
+      } else {
+        return _inventoryWidget();
+      }
     } else {
-      return new Column();
+      return new Center(
+        child: new CircularProgressIndicator()
+      );
     }
   }
+
+  _inventoryWidget () {
+    return new ListView(
+      children: inventory.items.map((InventoryItem item) {
+        return new ListTile(
+          title: new Text(item.name),
+          subtitle: new Text(item.description),
+        );
+      }).toList(),
+    );
+  }
+
 
   _toInventoryModify ([id = false]) {
     Navigator.of(context).push(
@@ -29,10 +54,13 @@ class InventoryState extends State<Inventory> {
 
   @override
   Widget build(BuildContext context) {
+
+    if (!_loadedInv) loadInventory();
+
     return new Scaffold(
       appBar: new AppBar(title: new Text('Inventory to Upload')),
       drawer: new HomeDrawer('/inventory'),
-      body: _body(),
+      body: body(),
       floatingActionButton: new FloatingActionButton(
         tooltip: 'Add',
         child: new Icon(Icons.add),

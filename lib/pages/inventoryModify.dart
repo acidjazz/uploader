@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import '../InventoryData.dart';
 
 class InventoryModify extends StatefulWidget {
   var id = false;
@@ -14,15 +15,12 @@ class InventoryModify extends StatefulWidget {
   @override
   InventoryModifyState createState() => new InventoryModifyState();
 
-  save () {
-    print('saving new inventory');
-  }
-
 }
 
 class InventoryModifyState extends State<InventoryModify> {
 
-  List<File> photos = new List();
+  InventoryItem item = new InventoryItem();
+  List<String> photos = new List();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
@@ -37,10 +35,9 @@ class InventoryModifyState extends State<InventoryModify> {
   addPhoto () async {
 
     var _file = await ImagePicker.pickImage(source: ImageSource.askUser);
-    setState(() { this.photos.add(_file); });
+    setState(() { this.photos.add(_file.path); });
 
     await new Future.delayed(const Duration(milliseconds: 300), () => "1");
-    // showInSnackBar('Photo added');
     _gridController.animateTo(
       _gridController.position.maxScrollExtent,
       duration: const Duration(milliseconds: 300),
@@ -55,6 +52,35 @@ class InventoryModifyState extends State<InventoryModify> {
     showInSnackBar('Photo removed');
   }
 
+  String _validateName(String value) {
+    if (value.isEmpty)
+      return 'Inventory name is required';
+    return null;
+  }
+
+  String _validatePhotos() {
+    if (photos.length < 1)
+      return 'Please select at least one photo';
+    return null;
+  }
+
+  save () async {
+    final FormState form = _formKey.currentState;
+    form.save();
+
+    if (!form.validate()) {
+      showInSnackBar('Please fill out required fields');
+    } else if (_validatePhotos() != null) {
+      showInSnackBar(_validatePhotos());
+    } else {
+      showInSnackBar('Saving new inventory');
+      item.photos = photos;
+      inventory.items.add(item);
+      await inventory.save();
+    }
+  }
+
+
   Widget addPhotosWidget () {
     return new GestureDetector(
       onTap: () { addPhoto(); },
@@ -62,12 +88,12 @@ class InventoryModifyState extends State<InventoryModify> {
         child: new Container(
           child: new Icon(Icons.add_a_photo, size: 30.0, color: Colors.blue),
             decoration: new BoxDecoration(
+              /*
+              color: Colors.white,
               border: new Border.all(width: 1.0, color: Colors.blue),
               borderRadius: new BorderRadius.all(new Radius.circular(1.0)),
-              color: Colors.white,
-              boxShadow: [
-                new BoxShadow(color: Colors.blue, blurRadius: 3.0)
-              ],
+              boxShadow: [ new BoxShadow(color: Colors.blue, blurRadius: 3.0) ],
+              */
           ),
         ),
       ),
@@ -75,7 +101,7 @@ class InventoryModifyState extends State<InventoryModify> {
   }
 
   List<Widget> photosWidget () {
-   var photos = this.photos.map((File photo) {
+   var photos = this.photos.map((String photo) {
       return new GridTile(
         header: new GestureDetector(
           onTap: () { removePhoto(photo); },
@@ -88,7 +114,7 @@ class InventoryModifyState extends State<InventoryModify> {
             ),
           ),
         ),
-        child: new Image.file(photo, fit: BoxFit.cover),
+        child: new Image.file(new File(photo), fit: BoxFit.cover),
       );
     }).toList();
     photos.add(addPhotosWidget());
@@ -107,7 +133,7 @@ class InventoryModifyState extends State<InventoryModify> {
         title: new Text(widget.id ? widget.titleEdit : widget.titleNew),
         actions: <Widget>[
           new FlatButton(
-            onPressed: widget.save,
+            onPressed: save,
             child: new Text('SAVE', style: const TextStyle(color: Colors.white)),
           ),
         ],
@@ -144,6 +170,9 @@ class InventoryModifyState extends State<InventoryModify> {
                     hintText: 'Your Item name',
                     labelText: 'Item Name',
                   ),
+                  initialValue: item.name == null ? '' : item.name,
+                  onSaved: (String value) { item.name = value; },
+                  validator: _validateName,
                 ),
 
                 new TextFormField(
@@ -153,14 +182,18 @@ class InventoryModifyState extends State<InventoryModify> {
                     labelText: 'Item Description',
                   ),
                   maxLines: null,
+                  initialValue: item.description == null ? '' : item.description,
+                  onSaved: (String value) { item.description = value; },
                 ),
 
                 new TextFormField(
                   decoration: const InputDecoration(
                     icon: const Icon(Icons.label),
-                    hintText: 'Item Category ',
+                    hintText: 'Item Category',
                     labelText: 'Category',
                   ),
+                  initialValue: item.category == null ? '' : item.category,
+                  onSaved: (String value) { item.category = value; },
                 ),
 
               ].reversed.toList(),
