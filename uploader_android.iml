@@ -13,13 +13,26 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/android" />
+    <output-test url="file://$MODULE_DIR$/android" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/android">
       <sourceFolder url="file://$MODULE_DIR$/android/app/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/android/gen" isTestSource="false" generated="true" />
+      <excludeFolder url="file://$MODULE_DIR$/android/.DS_Store" />
+      <excludeFolder url="file://$MODULE_DIR$/android/.gitignore" />
+      <excludeFolder url="file://$MODULE_DIR$/android/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/android/app" />
+      <excludeFolder url="file://$MODULE_DIR$/android/build.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/android/gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/android/gradle.properties" />
+      <excludeFolder url="file://$MODULE_DIR$/android/gradlew" />
+      <excludeFolder url="file://$MODULE_DIR$/android/gradlew.bat" />
+      <excludeFolder url="file://$MODULE_DIR$/android/local.properties" />
+      <excludeFolder url="file://$MODULE_DIR$/android/settings.gradle" />
     </content>
-    <orderEntry type="jdk" jdkName="Android API 25 Platform" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Flutter for Android" level="project" />
   </component>

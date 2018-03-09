@@ -15,7 +15,7 @@ class InventoryModify extends StatefulWidget {
   InventoryModify(this.index, this.item);
 
   final String titleNew = 'New Item';
-  final String titleEdit = 'Editing';
+  final String titleEdit = 'Edit Item';
 
   @override
   InventoryModifyState createState() => new InventoryModifyState();
@@ -39,12 +39,13 @@ class InventoryModifyState extends State<InventoryModify> {
   }
 
   addPhoto () async {
-
     var _file = await ImagePicker.pickImage(source: ImageSource.askUser);
-
     setState(() { item.photos.add(_file.path); });
-
     await new Future.delayed(const Duration(milliseconds: 300), () => "1");
+    scrollPhotos();
+  }
+
+  scrollPhotos () {
     _gridController.animateTo(
       _gridController.position.maxScrollExtent,
       duration: const Duration(milliseconds: 300),
@@ -156,15 +157,17 @@ class InventoryModifyState extends State<InventoryModify> {
         backgroundColor: Colors.grey,
         title: new Text(mode == Mode.Edit ? widget.titleEdit : widget.titleNew),
         actions: <Widget>[
-          new FlatButton(
+        new FlatButton(
             onPressed: save,
             child: new Text('SAVE', style: const TextStyle(color: Colors.white)),
           ),
           new PopupMenuButton(
+
             onSelected: _remove,
             itemBuilder: (BuildContext context) {
               return [
                 new PopupMenuItem (
+                  enabled: mode == Mode.Create ? false : true,
                   value: 'delete',
                   child: new Text('Delete'),
                 )

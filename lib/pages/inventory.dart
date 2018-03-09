@@ -22,7 +22,8 @@ class InventoryState extends State<Inventory> {
   body () {
     if (_loadedInv) {
       if (inventory.items.length < 1) {
-        return new Center(child: new Text('You have no inventory yet'));
+        return new Center(
+          child: new Text('You have no inventory yet', style: new TextStyle(fontSize: 20.0),));
       } else {
         return _inventoryWidget();
       }
@@ -40,10 +41,29 @@ class InventoryState extends State<Inventory> {
           title: new Text(item.name),
           subtitle: new Text(item.description),
           onTap: () { _toInventoryModify(inventory.items.indexOf(item), item); },
-          leading: new GridTile(
-            child: new Container(
-              height: 30.0,
-              child: new Image.file(new File(item.photos.first), fit: BoxFit.cover),
+          isThreeLine: true,
+          trailing: new Container(
+            height: 80.0,
+            width: 80.0,
+            child: new Stack(
+              alignment: Alignment.center,
+              overflow: Overflow.visible,
+              children: item.photos.getRange(0, item.photos.length > 2 ? 3 : item.photos.length).toList().reversed.map((photo) {
+                return new Positioned(
+                  right: 20.0*item.photos.indexOf(photo),
+                  width: 60.0,
+                  height: 60.0,
+                  child: new Container(
+                    child: new Image.file(new File(photo), fit: BoxFit.cover),
+                    decoration: new BoxDecoration(
+                      border: new Border(right: new BorderSide(
+                        width: photo == item.photos.first ? 0.0 : 1.0,
+                        color: Colors.white)
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
           ),
         );
@@ -75,7 +95,12 @@ class InventoryState extends State<Inventory> {
     if (!_loadedInv) loadInventory();
 
     return new Scaffold(
-      appBar: new AppBar(title: new Text('Inventory')),
+      appBar: new AppBar(
+        title: new Text('Inventory'),
+        actions: <Widget>[
+          new IconButton(icon: new Icon(Icons.signal_wifi_off), onPressed: null),
+        ],
+      ),
       drawer: new HomeDrawer('/inventory'),
       body: body(),
       floatingActionButton: new FloatingActionButton(

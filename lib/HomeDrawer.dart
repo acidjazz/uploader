@@ -34,6 +34,13 @@ class HomeDrawer extends StatelessWidget {
               currentAccountPicture: const CircleAvatar(
                 backgroundImage: const AssetImage('images/avatar.png'),
               ),
+              decoration: new BoxDecoration(
+                image: new DecorationImage(
+                  image: new AssetImage('images/pattern-box.png'),
+                  repeat: ImageRepeat.repeat,
+
+                ),
+              ),
             ),
             new ListTile(
               leading: const Icon(Icons.exit_to_app),
