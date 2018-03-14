@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../HomeDrawer.dart';
 import '../InventoryData.dart';
 import 'inventoryModify.dart';
+import 'package:connectivity/connectivity.dart';
 
 class Inventory extends StatefulWidget {
   @override
@@ -13,10 +14,39 @@ class Inventory extends StatefulWidget {
 class InventoryState extends State<Inventory> {
 
   var _loadedInv = false;
+  var _loadedSignal = false;
+  var _signalSubscription;
+  var _connection = Icons.signal_cellular_connected_no_internet_4_bar;
 
   loadInventory () async {
     await inventory.load();
     setState(() { _loadedInv = true; });
+  }
+
+  loadSignal () async {
+    var result = await (new Connectivity().checkConnectivity());
+    _connection = setConnectivity(result);
+    print('we have loaded the singal');
+    setState(() { _loadedSignal = true; });
+
+    if (_signalSubscription == null) {
+      print('we subscribing to the signal');
+      _signalSubscription = new Connectivity().onConnectivityChanged
+      .listen((ConnectivityResult result) {
+        _connection = setConnectivity(result);
+      });
+    }
+
+  }
+
+  setConnectivity (ConnectivityResult result) {
+    if (result == ConnectivityResult.mobile) {
+      return Icons.signal_cellular_4_bar;
+    } else if (result == ConnectivityResult.wifi) {
+      return Icons.signal_wifi_4_bar;
+    } else {
+      return Icons.signal_wifi_off;
+    }
   }
 
   body () {
@@ -93,12 +123,13 @@ class InventoryState extends State<Inventory> {
   Widget build(BuildContext context) {
 
     if (!_loadedInv) loadInventory();
+    if (!_loadedSignal) loadSignal();
 
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('Inventory'),
         actions: <Widget>[
-          new IconButton(icon: new Icon(Icons.signal_wifi_off), onPressed: null),
+          new IconButton(icon: new Icon(_connection), onPressed: null),
         ],
       ),
       drawer: new HomeDrawer('/inventory'),
