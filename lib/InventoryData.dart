@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:http/http.dart' as http;
 
 class InventoryData {
 
@@ -71,8 +74,10 @@ class InventoryItem extends JsonDecoder {
 }
 
 class InventoryItemPhoto extends JsonDecoder {
+
   String path;
   String url;
+
   InventoryItemPhoto(this.path, this.url);
 
   InventoryItemPhoto.fromJson(Map<String, dynamic> json)
@@ -92,6 +97,15 @@ class InventoryItemPhoto extends JsonDecoder {
     return photos.map((photo) {
       return new InventoryItemPhoto.fromJson(photo);
     }).toList(growable: true);
+  }
+
+  upload (progress, result) async {
+    final File file = new File(this.path);
+    final StorageReference ref =
+      FirebaseStorage.instance.ref().child(this.path);
+    final StorageUploadTask uploadTask = ref.put(file);
+    final Uri downloadUrl = (await uploadTask.future).downloadUrl;
+    this.url = downloadUrl.path;
   }
 
 }

@@ -3,6 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../UserData.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
+FirebaseUser anon;
+
 class Login extends StatefulWidget {
   @override
   LoginState createState() => new LoginState();
@@ -31,6 +36,7 @@ class LoginState extends State<Login> {
     } else {
       showInSnackBar('Loggin In..');
       form.save();
+      anon = await _auth.signInAnonymously();
       await user.save();
       Navigator.of(context).pushReplacementNamed('/home');
     }

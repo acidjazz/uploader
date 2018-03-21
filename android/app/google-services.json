@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "56897182379",
+    "firebase_url": "https://maxanet-uploader.firebaseio.com",
+    "project_id": "maxanet-uploader",
+    "storage_bucket": "maxanet-uploader.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:56897182379:android:83213506ff537fd3",
+        "android_client_info": {
+          "package_name": "com.maxanet.uploader"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "56897182379-17hddu0eue06g1714r8r9ktffm98t9d7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBz4zZ8dPJp8xC3Xkd9tegWJGbOdiTjGjE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

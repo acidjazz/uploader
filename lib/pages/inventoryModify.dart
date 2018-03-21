@@ -40,7 +40,7 @@ class InventoryModifyState extends State<InventoryModify> {
 
   addPhoto () async {
     var _file = await ImagePicker.pickImage(source: ImageSource.askUser);
-    setState(() { item.photos.add(new InventoryItemPhoto(_file.path, null)); });
+    setState(() { item.photos.add(new InventoryItemPhoto(_file.path, '')); });
     await new Future.delayed(const Duration(milliseconds: 300), () => "1");
     scrollPhotos();
   }

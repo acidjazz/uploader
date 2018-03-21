@@ -164,6 +164,15 @@ class InventoryState extends State<Inventory> {
         inventory.uploading = true;
         _snackBar('Starting upload process');
       });
+
+      // uploading photos
+      for (InventoryItem item in inventory.items) {
+        print(item.name);
+        for (InventoryItemPhoto photo in item.photos) {
+          print(photo.path);
+          photo.upload(() {}, () {});
+        }
+      }
       return true;
     }
 
