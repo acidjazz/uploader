@@ -40,7 +40,7 @@ class InventoryModifyState extends State<InventoryModify> {
 
   addPhoto () async {
     var _file = await ImagePicker.pickImage(source: ImageSource.askUser);
-    setState(() { item.photos.add(_file.path); });
+    setState(() { item.photos.add(new InventoryItemPhoto(_file.path, null)); });
     await new Future.delayed(const Duration(milliseconds: 300), () => "1");
     scrollPhotos();
   }
@@ -119,7 +119,7 @@ class InventoryModifyState extends State<InventoryModify> {
 
   List<Widget> photosWidget () {
 
-    var photos = item.photos.map((String photo) {
+    var photos = item.photos.map((InventoryItemPhoto photo) {
       return new GridTile(
         header: new GestureDetector(
           onTap: () { removePhoto(photo); },
@@ -135,7 +135,7 @@ class InventoryModifyState extends State<InventoryModify> {
           ),
         ),
         child: new Container(
-          child: new Image.file(new File(photo), fit: BoxFit.cover),
+          child: new Image.file(new File(photo.path), fit: BoxFit.cover),
           decoration: new BoxDecoration(
             border: new Border.all(width: 1.0, color: Colors.black38),
           ),

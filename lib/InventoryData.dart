@@ -11,6 +11,8 @@ class InventoryData {
   InventoryData._internal();
   static InventoryData get instance => _singleton;
 
+  bool uploading = false;
+
   Future<bool> save () async {
     final SharedPreferences prefs = await _prefs;
     prefs.setStringList('inventory', inventory.itemsToJson());
@@ -45,10 +47,11 @@ class InventoryData {
 
 class InventoryItem extends JsonDecoder {
 
-  List<String> photos = <String>[];
+  List<InventoryItemPhoto> photos = <InventoryItemPhoto>[];
   String name;
   String description;
   String category;
+  bool uploaded = false;
 
   InventoryItem();
 
@@ -56,15 +59,41 @@ class InventoryItem extends JsonDecoder {
     : name = json['name'],
       description = json['description'],
       category = json['category'],
-      photos = json['photos'].toList();
+      photos = InventoryItemPhoto.jsonToPhotos(json['photos'].toList());
 
   Map<String, dynamic> toJson() =>
     {
       'name': name,
       'description': description,
       'category': category,
-      'photos': photos,
+      'photos': InventoryItemPhoto.photosToJson(photos),
     };
+}
+
+class InventoryItemPhoto extends JsonDecoder {
+  String path;
+  String url;
+  InventoryItemPhoto(this.path, this.url);
+
+  InventoryItemPhoto.fromJson(Map<String, dynamic> json)
+    : path = json['path'], url = json['url'];
+
+  Map<String, dynamic> toJson() =>
+    { 'path': path, 'url': url, };
+
+
+  static photosToJson(photos) {
+    return photos.map((InventoryItemPhoto photo) {
+      return photo.toJson();
+    }).toList(growable: true);
+  }
+
+  static jsonToPhotos(photos) {
+    return photos.map((photo) {
+      return new InventoryItemPhoto.fromJson(photo);
+    }).toList(growable: true);
+  }
+
 }
 
 var inventory = new InventoryData._internal();
