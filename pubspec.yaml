@@ -21,7 +21,6 @@ dev_dependencies:
   firebase_storage: ^0.2.0
   google_sign_in: ^3.0.0
 
-
 flutter_icons:
   image_path: "images/icon.png"
   android: true

@@ -72,25 +72,40 @@ class InventoryState extends State<Inventory> {
   _inventoryWidget () {
     return new ListView(
       children: inventory.items.map((InventoryItem item) {
-        if (inventory.uploading) {
+        if (inventory.uploading == 'true') {
           return _listProgressTile(item);
         } else {
-          return _listTile(item);
+          return _listProgressTile(item);
+          // return _listTile(item);
         }
       }).toList(),
     );
   }
 
   _listProgressTile(InventoryItem item) {
+    double _progress = item.progress;
     return new Stack(
       alignment: Alignment.bottomCenter,
       children: [
         _listTile(item),
-        new LinearProgressIndicator(),
+        new LinearProgressIndicator(value: _progress),
       ]
 
     );
 
+  }
+
+  _leading(InventoryItem item) {
+
+    if (item.uploading == 'true') {
+      return new CircularProgressIndicator();
+    }
+
+    if (item.uploaded == 'true') {
+      return new Icon(Icons.check);
+    }
+
+    return new Icon(Icons.file_upload);
   }
 
   _listTile(InventoryItem item) {
@@ -99,6 +114,7 @@ class InventoryState extends State<Inventory> {
       subtitle: new Text(item.description),
       onTap: () { _toInventoryModify(inventory.items.indexOf(item), item); },
       isThreeLine: true,
+      leading: _leading(item),
       trailing: new Container(
         height: 80.0,
         width: 80.0,
@@ -149,7 +165,7 @@ class InventoryState extends State<Inventory> {
     ));
   }
 
-  _uploadItems () {
+  _uploadItems () async {
     if (inventory.items.length < 1) {
       _snackBar('You have no inventory yet');
       return true;
@@ -159,25 +175,47 @@ class InventoryState extends State<Inventory> {
       return null;
     }
 
-    if (inventory.uploading == false) {
+    if (inventory.uploading == 'false') {
+
       setState(() {
-        inventory.uploading = true;
+        inventory.uploading = 'true';
         _snackBar('Starting upload process');
       });
 
-      // uploading photos
-      for (InventoryItem item in inventory.items) {
-        print(item.name);
-        for (InventoryItemPhoto photo in item.photos) {
-          print(photo.path);
-          photo.upload(() {}, () {});
+      for (var itemIndex = 0; itemIndex < inventory.items.length; itemIndex++) {
+
+        InventoryItem item = inventory.items[itemIndex];
+        setState(() { item.uploading = 'true'; });
+
+        for (var photoIndex = 0; photoIndex < item.photos.length; photoIndex++) {
+          InventoryItemPhoto photo = item.photos[photoIndex];
+          await photo.upload('${itemIndex+1}-${photoIndex+1}');
+          setState(() {
+            item.progress = (photoIndex+1)/item.photos.length;
+            print(item.progress);
+          });
         }
+
+        setState(() {
+          item.progress = 1.0;
+          item.uploading = 'false';
+          item.uploaded = 'true';
+          inventory.save();
+          _snackBar('Images for ${item.name} saved');
+        });
+
       }
+
+      setState(() {
+        inventory.uploading = 'false';
+        _snackBar('Upload process complete');
+      });
+
       return true;
     }
 
     setState(() {
-      inventory.uploading = false;
+      inventory.uploading = 'false';
       _snackBar('Canceling upload process');
     });
 
@@ -202,8 +240,8 @@ class InventoryState extends State<Inventory> {
                 onPressed: _uploadItems,
                 icon: new Icon(_connection, color: _internet ? Colors.white : Colors.white30),
                 label: new Text(
-                  inventory.uploading ? 'CANCEL' : 'UPLOAD',
-                  style: new TextStyle(color: _internet ? Colors.white : Colors.white30)),
+                  'UPLOAD',
+                  style: new TextStyle(color: _internet && inventory.uploading == 'false' ? Colors.white : Colors.white30)),
               )
           )
         ],

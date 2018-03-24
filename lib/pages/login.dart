@@ -13,7 +13,6 @@ class Login extends StatefulWidget {
   LoginState createState() => new LoginState();
 }
 
-
 class LoginState extends State<Login> {
 
   var _loadedInitials = false;
