@@ -14,12 +14,16 @@ dev_dependencies:
     sdk: flutter
   flutter_launcher_icons: ^0.2.0
   shared_preferences: ^0.3.3
-  image_picker: ^0.2.1
+  image_picker: ^0.3.1
   connectivity: ^0.3.0
   image: ^1.1.30
-  firebase_auth: ^0.5.1
+  firebase_auth: ^0.5.2
   firebase_storage: ^0.2.0
+  firebase_core: ^0.1.0
   google_sign_in: ^3.0.0
+  path_provider: ^0.4.0
+  flutter_native_image:
+    git: https://github.com/acidjazz/flutter_native_image.git
 
 flutter_icons:
   image_path: "images/icon.png"

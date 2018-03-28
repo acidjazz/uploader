@@ -1,8 +1,8 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import '../InventoryData.dart';
 
 enum Mode { Create, Edit }
@@ -39,9 +39,9 @@ class InventoryModifyState extends State<InventoryModify> {
   }
 
   addPhoto () async {
-    var _file = await ImagePicker.pickImage(source: ImageSource.askUser);
-    setState(() { item.photos.add(new InventoryItemPhoto(_file.path, '')); });
-    await new Future.delayed(const Duration(milliseconds: 300), () => "1");
+    var _file = await ImagePicker.pickImage();
+    await _file.copy(inventory.path(_file.uri.pathSegments.last));
+    setState(() { item.photos.add(new InventoryItemPhoto(_file.uri.pathSegments.last, '', '')); });
     scrollPhotos();
   }
 
@@ -54,6 +54,8 @@ class InventoryModifyState extends State<InventoryModify> {
   }
 
   removePhoto (photo) {
+    final File _file = new File(inventory.path(photo.path));
+    _file.delete();
     setState(() { item.photos.remove(photo); });
     showInSnackBar('Photo removed');
   }
@@ -135,7 +137,7 @@ class InventoryModifyState extends State<InventoryModify> {
           ),
         ),
         child: new Container(
-          child: new Image.file(new File(photo.path), fit: BoxFit.cover),
+          child: new Image.file(new File(inventory.path(photo.path)), fit: BoxFit.cover),
           decoration: new BoxDecoration(
             border: new Border.all(width: 1.0, color: Colors.black38),
           ),

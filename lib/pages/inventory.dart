@@ -127,7 +127,7 @@ class InventoryState extends State<Inventory> {
               width: 60.0,
               height: 60.0,
               child: new Container(
-                child: new Image.file(new File(photo.path), fit: BoxFit.cover),
+                child: new Image.file(new File(inventory.path(photo.path)), fit: BoxFit.cover),
                 decoration: new BoxDecoration(
                   border: new Border(right: new BorderSide(
                     width: photo == item.photos.first ? 0.0 : 1.0,
@@ -166,6 +166,12 @@ class InventoryState extends State<Inventory> {
   }
 
   _uploadItems () async {
+
+    /*
+    print(inventory.toCSV());
+    return true;
+    */
+
     if (inventory.items.length < 1) {
       _snackBar('You have no inventory yet');
       return true;
@@ -184,15 +190,18 @@ class InventoryState extends State<Inventory> {
 
       for (var itemIndex = 0; itemIndex < inventory.items.length; itemIndex++) {
 
+
         InventoryItem item = inventory.items[itemIndex];
-        setState(() { item.uploading = 'true'; });
+        setState(() {
+          item.uploading = 'true';
+          item.progress = 0.0;
+        });
 
         for (var photoIndex = 0; photoIndex < item.photos.length; photoIndex++) {
           InventoryItemPhoto photo = item.photos[photoIndex];
           await photo.upload('${itemIndex+1}-${photoIndex+1}');
           setState(() {
             item.progress = (photoIndex+1)/item.photos.length;
-            print(item.progress);
           });
         }
 
@@ -241,7 +250,7 @@ class InventoryState extends State<Inventory> {
                 icon: new Icon(_connection, color: _internet ? Colors.white : Colors.white30),
                 label: new Text(
                   'UPLOAD',
-                  style: new TextStyle(color: _internet && inventory.uploading == 'false' ? Colors.white : Colors.white30)),
+                  style: new TextStyle(color: _internet && inventory.uploading == 'false' && inventory.items.length > 0 ? Colors.white : Colors.white30)),
               )
           )
         ],
