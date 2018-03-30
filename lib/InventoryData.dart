@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -58,7 +60,7 @@ class InventoryData {
     }).toList(growable: true);
   }
 
-  toCSV() {
+  toCSV () {
 
     List row = [];
     for (var itemIndex = 0; itemIndex < this.items.length; itemIndex++) {
@@ -70,11 +72,32 @@ class InventoryData {
         photos.add(photo.url);
         thumbnails.add(photo.thumbnail);
       }
-      row.add(
-        '${itemIndex + 1},${item.category},${item.description},,${photos.join(
-          ' ')},,1,${thumbnails.join(' ')},');
+      row.add('${itemIndex + 1}|${item.category}|${item.description}||${photos.join(' ')}||1|${thumbnails.join(' ')}|');
     }
     return row.join('\r\n');
+
+  }
+
+  post () async {
+
+    final Uri uri = Uri.parse("https://www.maxanet.com/cgi-bin/mrnewinv.cgi");
+    final request = new http.MultipartRequest("POST", uri);
+
+    request.fields['auction'] = 'exampled';
+    request.fields['remotepw'] = 'nexd123pw4';
+    request.fields['delimiter'] = '|';
+    request.fields['submit'] = '1';
+    request.files.add(new http.MultipartFile.fromString(
+      'filename',  this.toCSV(),
+      filename: 'csv.txt',
+      contentType: new MediaType('application', 'text/plain'),
+    ));
+
+    request.send().then((response) {
+      response.stream.transform(UTF8.decoder).listen((data) {
+        print(data);
+      });
+    });
 
   }
 
@@ -144,26 +167,32 @@ class InventoryItemPhoto extends JsonDecoder {
 
   upload(index) async {
 
+    // w/out isolation a delay helps w/ progress bars
     // await new Future.delayed(const Duration(seconds: 1));
+
+    // grabbing the file as a whole
     // final File file = new File(inventory.path(this.path));
+
+    // grabbing the file via a package that compresses it natively for speed purposes
     final File file = await FlutterNativeImage.compressImage(inventory.path(this.path),
       quality: 80,
       percentage: 50);
 
-    print('GETTING IMAGE FROM PORT');
+
+    // running decodeImage() in isolation due to delay
     ReceivePort receivePort = new ReceivePort();
     await Isolate.spawn(decode, new DecodeParam(file, receivePort.sendPort));
     Image image = await receivePort.first;
-    print('GOT IMAGE FROM PORT');
 
-    /*
-    Image image = decodeImage(file.readAsBytesSync());
-    */
+
+    // running deocdeImage() inline freezes the app/prgoress
+    // Image image = decodeImage(file.readAsBytesSync());
 
     this.thumbnail =
-    await uploadFile('$index-thumbnail-${file.uri.pathSegments.last}',
+    await uploadFile('$index-thumbnail-${file.uri.pathSegments.last.replaceAll('_compressed', '')}',
       copyResize(image, 240), file.parent.path);
-    this.url = await uploadFile('$index-${file.uri.pathSegments.last}',
+
+    this.url = await uploadFile('$index-${file.uri.pathSegments.last.replaceAll('_compressed', '')}',
       copyResize(image, 640), file.parent.path);
 
     return true;
@@ -179,7 +208,7 @@ class InventoryItemPhoto extends JsonDecoder {
     File file = new File('$path/$name');
 
     final StorageReference ref =
-    FirebaseStorage.instance.ref().child('folder/$name');
+      FirebaseStorage.instance.ref().child('folder/$name');
     final StorageUploadTask uploadTask = ref.put(file);
     final Uri downloadUrl = (await uploadTask.future).downloadUrl;
     file.delete();
@@ -188,11 +217,10 @@ class InventoryItemPhoto extends JsonDecoder {
 
 }
 
-var inventory = new InventoryData._internal();
-
 class DecodeParam {
   final File file;
   final SendPort sendPort;
-
   DecodeParam(this.file, this.sendPort);
 }
+
+var inventory = new InventoryData._internal();

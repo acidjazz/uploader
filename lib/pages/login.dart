@@ -33,7 +33,7 @@ class LoginState extends State<Login> {
     if (!form.validate()) {
       showInSnackBar('Please complete the login form');
     } else {
-      showInSnackBar('Loggin In..');
+      showInSnackBar('Logging In..');
       form.save();
       anon = await _auth.signInAnonymously();
       await user.save();

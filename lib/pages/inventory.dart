@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -167,10 +168,7 @@ class InventoryState extends State<Inventory> {
 
   _uploadItems () async {
 
-    /*
-    print(inventory.toCSV());
-    return true;
-    */
+
 
     if (inventory.items.length < 1) {
       _snackBar('You have no inventory yet');
@@ -220,6 +218,13 @@ class InventoryState extends State<Inventory> {
         _snackBar('Upload process complete');
       });
 
+
+      setState(() async {
+        await new Future.delayed(const Duration(seconds: 2));
+        _snackBar('Inventory successfully added');
+        inventory.post();
+      });
+
       return true;
     }
 
@@ -227,6 +232,7 @@ class InventoryState extends State<Inventory> {
       inventory.uploading = 'false';
       _snackBar('Canceling upload process');
     });
+
 
     return null;
   }
@@ -240,7 +246,7 @@ class InventoryState extends State<Inventory> {
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: new Text('Inventory'),
+        title: new Text('Iiiiinventory'),
         actions: <Widget>[
           new FlatButton(
             onPressed: null,
