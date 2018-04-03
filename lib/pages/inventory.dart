@@ -246,7 +246,7 @@ class InventoryState extends State<Inventory> {
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: new Text('Iiiiinventory'),
+        title: new Text('Inventory'),
         actions: <Widget>[
           new FlatButton(
             onPressed: null,

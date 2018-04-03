@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maxanet_uploader/pages/inventories.dart' show Inventories;
 import 'pages/inventory.dart' show Inventory;
 import 'pages/login.dart' show Login;
 import 'pages/home.dart' show Home;
@@ -14,6 +15,7 @@ class Uploader extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         '/home': (BuildContext context) => new Home(),
         '/login': (BuildContext context) => new Login(),
+        '/inventories': (BuildContext context) => new Inventories(),
         '/inventory': (BuildContext context) => new Inventory(),
       },
     );
