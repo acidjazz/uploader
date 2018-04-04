@@ -12,11 +12,20 @@ class Uploader extends StatelessWidget {
     return new MaterialApp(
       title: 'Maxanet Uploader',
       home: new Center(child: new Login()),
+      onGenerateRoute: (RouteSettings settings) {
+        final List<String> path = settings.name.split('/');
+        if (path[1]  != 'inventory') {
+          return null;
+        }
+        print('WE GOING TO ${path[2]}');
+        return new MaterialPageRoute(
+          builder: (context) => new Inventory(path[2]),
+        );
+      },
       routes: <String, WidgetBuilder>{
         '/home': (BuildContext context) => new Home(),
         '/login': (BuildContext context) => new Login(),
         '/inventories': (BuildContext context) => new Inventories(),
-        '/inventory': (BuildContext context) => new Inventory(),
       },
     );
   }

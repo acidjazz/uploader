@@ -25,22 +25,30 @@ class InventoryData {
 
   String uploading = 'false';
 
-  Future<bool> save() async {
+  Future<bool> save (name) async {
     final SharedPreferences prefs = await _prefs;
-    prefs.setStringList('inventory', inventory.itemsToJson());
+    prefs.setStringList(name, inventory.itemsToJson());
     await new Future.delayed(const Duration(seconds: 1));
     return true;
   }
 
-  Future<bool> load() async {
+  Future<List> load (name) async {
+    List<InventoryItem> items;
     final SharedPreferences prefs = await _prefs;
-    if (prefs.getStringList('inventory') == null) {
-      inventory.items = new List<InventoryItem>();
+    if (prefs.getStringList(name) == null) {
+      items = new List<InventoryItem>();
     } else {
-      inventory.items = jsonToItems(prefs.getStringList('inventory'));
+      items = jsonToItems(prefs.getStringList(name));
     }
+    inventory.items = items;
     await new Future.delayed(const Duration(seconds: 1));
     appDoc = await getApplicationDocumentsDirectory();
+    return items;
+  }
+
+  Future<bool> remove (name) async {
+    final SharedPreferences prefs = await _prefs;
+    prefs.remove(name);
     return true;
   }
 
@@ -174,10 +182,10 @@ class InventoryItemPhoto extends JsonDecoder {
     // final File file = new File(inventory.path(this.path));
 
     // grabbing the file via a package that compresses it natively for speed purposes
+
     final File file = await FlutterNativeImage.compressImage(inventory.path(this.path),
       quality: 80,
       percentage: 50);
-
 
     // running decodeImage() in isolation due to delay
     ReceivePort receivePort = new ReceivePort();

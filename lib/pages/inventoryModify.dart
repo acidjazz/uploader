@@ -11,8 +11,9 @@ class InventoryModify extends StatefulWidget {
 
   final index;
   final item;
+  final name;
 
-  InventoryModify(this.index, this.item);
+  InventoryModify(this.index, this.item, this.name);
 
   final String titleNew = 'New Item';
   final String titleEdit = 'Edit Item';
@@ -87,7 +88,7 @@ class InventoryModifyState extends State<InventoryModify> {
       } else {
         inventory.items[widget.index] = item;
       }
-      await inventory.save();
+      await inventory.save(widget.name);
       Navigator.pop(context);
     }
   }
@@ -95,7 +96,7 @@ class InventoryModifyState extends State<InventoryModify> {
   void _remove (choice) async {
     showInSnackBar('Removing Item..');
     inventory.items.remove(item);
-    await inventory.save();
+    await inventory.save(widget.name);
     Navigator.pop(context);
   }
 

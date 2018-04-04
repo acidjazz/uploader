@@ -8,6 +8,8 @@ import 'inventoryModify.dart';
 import 'package:connectivity/connectivity.dart';
 
 class Inventory extends StatefulWidget {
+  final String name;
+  Inventory(this.name);
   @override
   InventoryState createState() => new InventoryState();
 }
@@ -23,7 +25,7 @@ class InventoryState extends State<Inventory> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   loadInventory () async {
-    await inventory.load();
+    await inventory.load(widget.name);
     setState(() { _loadedInv = true; });
   }
 
@@ -54,12 +56,11 @@ class InventoryState extends State<Inventory> {
     }
   }
 
-
-  body () {
+  _body () {
     if (_loadedInv) {
       if (inventory.items.length < 1) {
         return new Center(
-          child: new Text('You have no inventory yet', style: new TextStyle(fontSize: 20.0),));
+          child: new Text('Click the "+" to add an item to ${widget.name}', style: new TextStyle(fontSize: 20.0),));
       } else {
         return _inventoryWidget();
       }
@@ -147,7 +148,7 @@ class InventoryState extends State<Inventory> {
     Navigator.of(context).push(
       new MaterialPageRoute(
         fullscreenDialog: true,
-        builder: (context) => new InventoryModify(index, item)
+        builder: (context) => new InventoryModify(index, item, widget.name)
       )
     );
   }
@@ -156,7 +157,7 @@ class InventoryState extends State<Inventory> {
     Navigator.of(context).push(
       new MaterialPageRoute(
         fullscreenDialog: true,
-        builder: (context) => new InventoryModify(null, null),
+        builder: (context) => new InventoryModify(null, null, widget.name),
       )
     );
   }
@@ -167,8 +168,6 @@ class InventoryState extends State<Inventory> {
   }
 
   _uploadItems () async {
-
-
 
     if (inventory.items.length < 1) {
       _snackBar('You have no inventory yet');
@@ -207,7 +206,7 @@ class InventoryState extends State<Inventory> {
           item.progress = 1.0;
           item.uploading = 'false';
           item.uploaded = 'true';
-          inventory.save();
+          inventory.save(widget.name);
           _snackBar('Images for ${item.name} saved');
         });
 
@@ -246,7 +245,7 @@ class InventoryState extends State<Inventory> {
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: new Text('Inventory'),
+        title: new Text(widget.name),
         actions: <Widget>[
           new FlatButton(
             onPressed: null,
@@ -261,8 +260,7 @@ class InventoryState extends State<Inventory> {
           )
         ],
       ),
-      drawer: new HomeDrawer('/inventory'),
-      body: body(),
+      body: _body(),
       floatingActionButton: new FloatingActionButton(
         tooltip: 'Add',
         child: new Icon(Icons.add),

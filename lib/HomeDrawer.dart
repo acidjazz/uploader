@@ -55,7 +55,7 @@ class HomeDrawer extends StatelessWidget {
             ),
             new ListTile(
               leading: const Icon(Icons.shopping_cart),
-              title: const Text('Inventory'),
+              title: const Text('Inventories'),
               onTap: () => Navigator.pushNamed(context, '/inventories'),
               selected: this.routeName == '/inventories',
             ),
