@@ -14,6 +14,7 @@ class Inventory extends StatefulWidget {
   InventoryState createState() => new InventoryState();
 }
 
+// class InventoryState extends State<Inventory> with WidgetsBindingObserver {
 class InventoryState extends State<Inventory> {
 
   var _loadedInv = false;
@@ -21,6 +22,11 @@ class InventoryState extends State<Inventory> {
   var _signalSubscription;
   var _connection = Icons.signal_cellular_connected_no_internet_4_bar;
   var _internet = false;
+
+  /*
+  @override
+  didPopRoute () async => false;
+  */
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -73,14 +79,8 @@ class InventoryState extends State<Inventory> {
 
   _inventoryWidget () {
     return new ListView(
-      children: inventory.items.map((InventoryItem item) {
-        if (inventory.uploading == 'true') {
-          return _listProgressTile(item);
-        } else {
-          return _listProgressTile(item);
-          // return _listTile(item);
-        }
-      }).toList(),
+      children: inventory.items.map((InventoryItem item)
+        => _listProgressTile(item)).toList(),
     );
   }
 
@@ -167,74 +167,139 @@ class InventoryState extends State<Inventory> {
     ));
   }
 
-  _uploadItems () async {
+  _canAction () {
+
+    if (inventory.items == null) {
+      return 'Inventory not loaded yet';
+    }
 
     if (inventory.items.length < 1) {
-      _snackBar('You have no inventory yet');
-      return true;
-    }
-    if (_internet == false) {
-      _snackBar('Internet is required to upload inventory');
-      return null;
+      return 'You have no inventory yet';
     }
 
-    if (inventory.uploading == 'false') {
+    if (_internet == false) {
+      return 'Internet is required to upload inventory';
+    }
+
+    return null;
+  }
+
+  _actionButton () {
+
+    Function action;
+    String copy;
+
+    if (inventory.uploaded == 'false') {
+      action = _uploadItems;
+      copy = 'UPLOAD';
+    }
+
+    if (inventory.uploading == 'true') {
+      action = _cancelUpload;
+      copy = 'CANCEL';
+    }
+
+    if (inventory.uploaded == 'true') {
+      action = _publishItems;
+      copy = 'PUBLISH';
+    }
+
+    return new FlatButton.icon(
+      onPressed: action,
+      icon: new Icon(
+        _connection,
+        color: _internet ? Colors.white : Colors.white30),
+      label: new Text(copy,
+      style: new TextStyle(
+        color: _canAction() == null ? Colors.white : Colors.white30
+        )
+      ),
+    );
+
+  }
+
+  _cancelUpload () {
+    inventory.cancel = 'true';
+  }
+
+  _publishItems () async {
+
+    String workspace = 'exampled';
+
+    // setup an alert dialog here
+
+    inventory.post(workspace);
+    setState(() {
+      _snackBar('Inventory successfully published');
+    });
+
+  }
+  _uploadItems () async {
+
+    if (_canAction() != null) {
+      _snackBar(_canAction());
+      return false;
+    }
+
+    setState(() {
+      inventory.uploading = 'true';
+      _snackBar('Starting upload process');
+    });
+
+    for (var itemIndex = 0; itemIndex < inventory.items.length; itemIndex++) {
+
+      if (inventory.cancel == 'true') {
+        break;
+      }
+
+      InventoryItem item = inventory.items[itemIndex];
 
       setState(() {
-        inventory.uploading = 'true';
-        _snackBar('Starting upload process');
+        item.uploading = 'true';
+        item.progress = 0.0;
       });
 
-      for (var itemIndex = 0; itemIndex < inventory.items.length; itemIndex++) {
+      for (var photoIndex = 0; photoIndex < item.photos.length; photoIndex++) {
 
-
-        InventoryItem item = inventory.items[itemIndex];
-        setState(() {
-          item.uploading = 'true';
-          item.progress = 0.0;
-        });
-
-        for (var photoIndex = 0; photoIndex < item.photos.length; photoIndex++) {
-          InventoryItemPhoto photo = item.photos[photoIndex];
-          await photo.upload('${itemIndex+1}-${photoIndex+1}');
-          setState(() {
-            item.progress = (photoIndex+1)/item.photos.length;
-          });
+        if (inventory.cancel == 'true') {
+          break;
         }
 
+        InventoryItemPhoto photo = item.photos[photoIndex];
+        await photo.upload('${itemIndex+1}-${photoIndex+1}');
         setState(() {
-          item.progress = 1.0;
-          item.uploading = 'false';
-          item.uploaded = 'true';
-          inventory.save(widget.name);
-          _snackBar('Images for ${item.name} saved');
+          item.progress = (photoIndex+1)/item.photos.length;
         });
-
       }
 
       setState(() {
-        inventory.uploading = 'false';
-        _snackBar('Upload process complete');
+        item.progress = 1.0;
+        item.uploading = 'false';
+        item.uploaded = 'true';
+        inventory.save(widget.name);
+        _snackBar('Images for ${item.name} saved');
       });
 
+    }
 
-      setState(() async {
-        await new Future.delayed(const Duration(seconds: 2));
-        _snackBar('Inventory successfully added');
-        inventory.post();
-      });
-
+    if (inventory.cancel == 'true') {
+      inventory.cancel = 'false';
+      inventory.uploading = 'false';
+      _snackBar('Upload process cancelled');
       return true;
     }
 
     setState(() {
       inventory.uploading = 'false';
-      _snackBar('Canceling upload process');
+      inventory.uploaded = 'true';
+      _snackBar('Upload process complete');
     });
 
+    return true;
 
-    return null;
   }
+
+  Future<bool> _onWillPop () async => inventory.uploading == 'false';
 
   @override
   Widget build(BuildContext context) {
@@ -242,29 +307,25 @@ class InventoryState extends State<Inventory> {
     if (!_loadedInv) loadInventory();
     if (!_loadedSignal) loadSignal();
 
-    return new Scaffold(
-      key: _scaffoldKey,
-      appBar: new AppBar(
-        title: new Text(widget.name),
-        actions: <Widget>[
-          new FlatButton(
-            onPressed: null,
-            child:
-              new FlatButton.icon(
-                onPressed: _uploadItems,
-                icon: new Icon(_connection, color: _internet ? Colors.white : Colors.white30),
-                label: new Text(
-                  'UPLOAD',
-                  style: new TextStyle(color: _internet && inventory.uploading == 'false' && inventory.items.length > 0 ? Colors.white : Colors.white30)),
-              )
-          )
-        ],
-      ),
-      body: _body(),
-      floatingActionButton: new FloatingActionButton(
-        tooltip: 'Add',
-        child: new Icon(Icons.add),
-        onPressed: _toInventoryCreate,
+    return new WillPopScope(
+      onWillPop: _onWillPop,
+      child: new Scaffold(
+        key: _scaffoldKey,
+        appBar: new AppBar(
+          title: new Text(widget.name),
+          actions: <Widget>[
+            new FlatButton(
+              onPressed: null,
+              child: _actionButton(),
+            )
+          ],
+        ),
+        body: _body(),
+        floatingActionButton: new FloatingActionButton(
+          tooltip: 'Add',
+          child: new Icon(Icons.add),
+          onPressed: _toInventoryCreate,
+        ),
       ),
     );
   }

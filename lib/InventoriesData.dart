@@ -16,7 +16,7 @@ class InventoriesData {
   Future<bool> save() async {
     final SharedPreferences prefs = await _prefs;
     prefs.setStringList('inventories', inventories.itemsToJson());
-    await new Future.delayed(const Duration(seconds: 1));
+    // await new Future.delayed(const Duration(seconds: 1));
     return true;
   }
 
@@ -38,13 +38,21 @@ class InventoriesData {
     });
     */
 
-    await new Future.delayed(const Duration(seconds: 1));
+    // await new Future.delayed(const Duration(seconds: 1));
     return true;
   }
 
   Future<bool> remove(name) async {
     await inventory.remove(name);
-    inventories.items.remove(name);
+
+    for (var i = 0; i < inventories.items.length; i++) {
+      if (name == inventories.items[i].name) {
+        print('REMOVEING');
+        print(name);
+        inventories.items.removeAt(i);
+      }
+    }
+
     await inventories.save();
     return true;
   }

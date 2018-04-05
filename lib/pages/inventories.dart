@@ -88,10 +88,10 @@ class InventoriesState extends State<Inventories> {
         content: new Text('Are you sure you want to delete $name?'),
       actions: <Widget>[
         new FlatButton( child: new Text("CANCEL"), onPressed: () => Navigator.pop(context)),
-        new FlatButton( child: new Text("DELETE"), onPressed: () {
+        new FlatButton( child: new Text("DELETE"), onPressed: () async {
           Navigator.pop(context);
+          await inventories.remove(name);
           setState(() {
-            inventories.remove(name);
             _loaded = false;
           });
         }),

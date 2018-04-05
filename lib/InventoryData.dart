@@ -24,24 +24,29 @@ class InventoryData {
   static InventoryData get instance => _singleton;
 
   String uploading = 'false';
+  String uploaded = 'false';
+  String published = 'false';
+  String cancel = 'false';
 
   Future<bool> save (name) async {
     final SharedPreferences prefs = await _prefs;
     prefs.setStringList(name, inventory.itemsToJson());
-    await new Future.delayed(const Duration(seconds: 1));
+    // await new Future.delayed(const Duration(seconds: 1));
     return true;
   }
 
   Future<List> load (name) async {
+
     List<InventoryItem> items;
     final SharedPreferences prefs = await _prefs;
+
     if (prefs.getStringList(name) == null) {
       items = new List<InventoryItem>();
     } else {
       items = jsonToItems(prefs.getStringList(name));
     }
+
     inventory.items = items;
-    await new Future.delayed(const Duration(seconds: 1));
     appDoc = await getApplicationDocumentsDirectory();
     return items;
   }
@@ -86,12 +91,13 @@ class InventoryData {
 
   }
 
-  post () async {
+  post (workspace) async {
 
     final Uri uri = Uri.parse("https://www.maxanet.com/cgi-bin/mrnewinv.cgi");
     final request = new http.MultipartRequest("POST", uri);
 
-    request.fields['auction'] = 'exampled';
+    // request.fields['auction'] = 'exampled';
+    request.fields['auction'] = workspace;
     request.fields['remotepw'] = 'nexd123pw4';
     request.fields['delimiter'] = '|';
     request.fields['submit'] = '1';
