@@ -23,6 +23,9 @@ class InventoryState extends State<Inventory> {
   var _connection = Icons.signal_cellular_connected_no_internet_4_bar;
   var _internet = false;
 
+  var workspaceId;
+  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+
   /*
   @override
   didPopRoute () async => false;
@@ -200,7 +203,7 @@ class InventoryState extends State<Inventory> {
     }
 
     if (inventory.uploaded == 'true') {
-      action = _publishItems;
+      action = _publishDialog;
       copy = 'PUBLISH';
     }
 
@@ -222,16 +225,57 @@ class InventoryState extends State<Inventory> {
     inventory.cancel = 'true';
   }
 
+  String _validateWorkspaceId (String value) {
+    if (value.isEmpty) {
+      return 'Please specify a workspace';
+    }
+    return null;
+  }
+
+  _publishDialog () {
+    showDialog(
+      context: context,
+      child: new _SystemPadding(child: new AlertDialog(
+        title: new Text("Workspace ID"),
+        content: new Form(
+          key: _formKey,
+          child: new TextFormField(
+            decoration: const InputDecoration(
+              icon: const Icon(Icons.bookmark),
+            ),
+            onSaved: (String value) { workspaceId = value; },
+            validator: _validateWorkspaceId,
+            autofocus: true,
+
+          ),
+        ),
+        actions: <Widget>[
+          new FlatButton(
+            child: new Text("CANCEL"),
+            onPressed: () => Navigator.pop(context),
+          ),
+          new FlatButton(
+            child: new Text("PUBLISH"),
+            onPressed: _publishItems,
+          ),
+        ]
+      )),
+    );
+  }
+
   _publishItems () async {
 
-    String workspace = 'exampled';
+    final FormState form = _formKey.currentState;
+    form.save();
 
-    // setup an alert dialog here
+    if (!form.validate()) {
+      return false;
+    }
 
-    inventory.post(workspace);
-    setState(() {
-      _snackBar('Inventory successfully published');
-    });
+    Navigator.pop(context);
+
+    inventory.post(workspaceId);
+    setState(() => _snackBar('Inventory successfully published'));
 
   }
   _uploadItems () async {
@@ -330,4 +374,21 @@ class InventoryState extends State<Inventory> {
     );
   }
 
+}
+
+// remove this after beta update, shouldn't be needed anymore
+// ref: https://github.com/flutter/flutter/pull/15426
+class _SystemPadding extends StatelessWidget {
+  final Widget child;
+
+  _SystemPadding({Key key, this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
+    return new AnimatedContainer(
+      padding: mediaQuery.viewInsets,
+      duration: const Duration(milliseconds: 60),
+      child: child);
+  }
 }
