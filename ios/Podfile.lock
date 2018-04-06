@@ -84,7 +84,7 @@ DEPENDENCIES:
   - firebase_auth (from `Pods/.symlinks/plugins/firebase_auth-0.5.3/ios`)
   - firebase_core (from `Pods/.symlinks/plugins/firebase_core-0.1.2/ios`)
   - firebase_storage (from `Pods/.symlinks/plugins/firebase_storage-0.2.0/ios`)
-  - Flutter (from `Pods/.symlinks/flutter/ios`)
+  - Flutter (from `Pods/.symlinks/flutter/ios-release`)
   - flutter_native_image (from `Pods/.symlinks/plugins/flutter_native_image-d904389b1e81b03d274d39414a0c34e3b31e5863/ios`)
   - google_sign_in (from `Pods/.symlinks/plugins/google_sign_in-3.0.0/ios`)
   - image_picker (from `Pods/.symlinks/plugins/image_picker-0.3.1/ios`)
@@ -101,7 +101,7 @@ EXTERNAL SOURCES:
   firebase_storage:
     :path: Pods/.symlinks/plugins/firebase_storage-0.2.0/ios
   Flutter:
-    :path: Pods/.symlinks/flutter/ios
+    :path: Pods/.symlinks/flutter/ios-release
   flutter_native_image:
     :path: Pods/.symlinks/plugins/flutter_native_image-d904389b1e81b03d274d39414a0c34e3b31e5863/ios
   google_sign_in:

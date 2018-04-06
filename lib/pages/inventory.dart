@@ -126,13 +126,18 @@ class InventoryState extends State<Inventory> {
         child: new Stack(
           alignment: Alignment.center,
           overflow: Overflow.visible,
-          children: item.photos.getRange(0, item.photos.length > 2 ? 3 : item.photos.length).toList().reversed.map((photo) {
+          children: item.photos.getRange(0,
+            item.photos.length > 2 ? 3 : item.photos.length)
+              .toList().reversed.map((photo) {
             return new Positioned(
               right: 20.0*item.photos.indexOf(photo),
               width: 60.0,
               height: 60.0,
               child: new Container(
-                child: new Image.file(new File(inventory.path(photo.path)), fit: BoxFit.cover),
+                child: new Image.file(
+                  new File(
+                    inventory.path(photo.path)),
+                  fit: BoxFit.cover),
                 decoration: new BoxDecoration(
                   border: new Border(right: new BorderSide(
                     width: photo == item.photos.first ? 0.0 : 1.0,
