@@ -17,7 +17,6 @@ class Uploader extends StatelessWidget {
         if (path[1]  != 'inventory') {
           return null;
         }
-        print('WE GOING TO ${path[2]}');
         return new MaterialPageRoute(
           builder: (context) => new Inventory(path[2]),
         );

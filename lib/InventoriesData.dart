@@ -21,7 +21,6 @@ class InventoriesData {
   }
 
   Future<bool> load() async {
-    print('initiating inventories.load()');
     final SharedPreferences prefs = await _prefs;
     if (prefs.getStringList('inventories') == null) {
       inventories.items = new List<InventoriesItem>();
@@ -47,8 +46,6 @@ class InventoriesData {
 
     for (var i = 0; i < inventories.items.length; i++) {
       if (name == inventories.items[i].name) {
-        print('REMOVEING');
-        print(name);
         inventories.items.removeAt(i);
       }
     }

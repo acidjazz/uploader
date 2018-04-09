@@ -23,6 +23,8 @@ class InventoryState extends State<Inventory> {
   var _connection = Icons.signal_cellular_connected_no_internet_4_bar;
   var _internet = false;
 
+  int _bottomIndex = 0;
+
   var workspaceId;
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
@@ -35,6 +37,7 @@ class InventoryState extends State<Inventory> {
 
   loadInventory () async {
     await inventory.load(widget.name);
+    _bottomBarIndex();
     setState(() { _loadedInv = true; });
   }
 
@@ -192,39 +195,6 @@ class InventoryState extends State<Inventory> {
     return null;
   }
 
-  _actionButton () {
-
-    Function action;
-    String copy;
-
-    if (inventory.uploaded == 'false') {
-      action = _uploadItems;
-      copy = 'UPLOAD';
-    }
-
-    if (inventory.uploading == 'true') {
-      action = _cancelUpload;
-      copy = 'CANCEL';
-    }
-
-    if (inventory.uploaded == 'true') {
-      action = _publishDialog;
-      copy = 'PUBLISH';
-    }
-
-    return new FlatButton.icon(
-      onPressed: action,
-      icon: new Icon(
-        _connection,
-        color: _internet ? Colors.white : Colors.white30),
-      label: new Text(copy,
-      style: new TextStyle(
-        color: _canAction() == null ? Colors.white : Colors.white30
-        )
-      ),
-    );
-
-  }
 
   _cancelUpload () {
     inventory.cancel = 'true';
@@ -342,10 +312,34 @@ class InventoryState extends State<Inventory> {
       inventory.uploading = 'false';
       inventory.uploaded = 'true';
       _snackBar('Upload process complete');
+      _bottomBarIndex();
     });
 
     return true;
 
+  }
+
+  int _bottomBarIndex () {
+    if (inventory.uploaded == 'true') {
+      setState(() => _bottomIndex = 1);
+      return 1;
+    }
+    setState(() => _bottomIndex = 0);
+    return 0;
+  }
+
+
+  _bottomBar (choice) {
+    if (choice == 0) {
+      if (inventory.uploading == 'true') {
+        _cancelUpload();
+      } else {
+        _uploadItems();
+      }
+    }
+
+    print('BOTTOMBAR');
+    print(choice);
   }
 
   Future<bool> _onWillPop () async => inventory.uploading == 'false';
@@ -363,17 +357,32 @@ class InventoryState extends State<Inventory> {
         appBar: new AppBar(
           title: new Text(widget.name),
           actions: <Widget>[
-            new FlatButton(
-              onPressed: null,
-              child: _actionButton(),
-            )
-          ],
+            new Icon(_connection),
+          ]
         ),
         body: _body(),
         floatingActionButton: new FloatingActionButton(
           tooltip: 'Add',
           child: new Icon(Icons.add),
           onPressed: _toInventoryCreate,
+        ),
+        bottomNavigationBar: new BottomNavigationBar(
+          onTap: _bottomBar,
+          currentIndex: _bottomIndex,
+          items: [
+            new BottomNavigationBarItem(
+              icon: new Icon(Icons.file_upload),
+              title: new Text('Upload Photos'),
+            ),
+            new BottomNavigationBarItem(
+              icon: new Icon(Icons.cloud_upload),
+              title: new Text('Publish Inventory'),
+            ),
+            new BottomNavigationBarItem(
+              icon: new Icon(Icons.delete_forever),
+              title: new Text('Remove Inventory'),
+            ),
+          ]
         ),
       ),
     );
