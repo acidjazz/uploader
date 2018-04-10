@@ -42,7 +42,12 @@ class InventoryModifyState extends State<InventoryModify> {
   addPhoto () async {
     var _file = await ImagePicker.pickImage();
     await _file.copy(inventory.path(_file.uri.pathSegments.last));
-    setState(() { item.photos.add(new InventoryItemPhoto(_file.uri.pathSegments.last, '', '')); });
+    setState(() {
+      item.photos.add(new InventoryItemPhoto(_file.uri.pathSegments.last, '', ''));
+      item.uploaded = 'false';
+      inventory.uploaded = 'false';
+    });
+    await inventory.save(widget.name);
     scrollPhotos();
   }
 

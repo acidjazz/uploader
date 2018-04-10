@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import '../HomeDrawer.dart';
+import 'package:maxanet_uploader/InventoriesData.dart';
 import '../InventoryData.dart';
 import 'inventoryModify.dart';
 import 'package:connectivity/connectivity.dart';
@@ -14,10 +14,9 @@ class Inventory extends StatefulWidget {
   InventoryState createState() => new InventoryState();
 }
 
-// class InventoryState extends State<Inventory> with WidgetsBindingObserver {
 class InventoryState extends State<Inventory> {
 
-  var _loadedInv = false;
+  var _loaded = false;
   var _loadedSignal = false;
   var _signalSubscription;
   var _connection = Icons.signal_cellular_connected_no_internet_4_bar;
@@ -26,19 +25,14 @@ class InventoryState extends State<Inventory> {
   int _bottomIndex = 0;
 
   var workspaceId;
+
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-
-  /*
-  @override
-  didPopRoute () async => false;
-  */
-
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   loadInventory () async {
     await inventory.load(widget.name);
     _bottomBarIndex();
-    setState(() { _loadedInv = true; });
+    setState(() { _loaded = true; });
   }
 
   loadSignal () async {
@@ -69,7 +63,7 @@ class InventoryState extends State<Inventory> {
   }
 
   _body () {
-    if (_loadedInv) {
+    if (_loaded) {
       if (inventory.items.length < 1) {
         return new Center(
           child: new Text('Click the "+" to add an item to ${widget.name}', style: new TextStyle(fontSize: 20.0),));
@@ -155,22 +149,24 @@ class InventoryState extends State<Inventory> {
     );
   }
 
-  _toInventoryModify (int index, InventoryItem item) {
-    Navigator.of(context).push(
+  _toInventoryModify (int index, InventoryItem item) async {
+    await Navigator.of(context).push(
       new MaterialPageRoute(
         fullscreenDialog: true,
         builder: (context) => new InventoryModify(index, item, widget.name)
       )
     );
+    _loaded = false;
   }
 
-  _toInventoryCreate () {
-    Navigator.of(context).push(
+  _toInventoryCreate () async {
+    await Navigator.of(context).push(
       new MaterialPageRoute(
         fullscreenDialog: true,
         builder: (context) => new InventoryModify(null, null, widget.name),
       )
     );
+    _loaded = false;
   }
   _snackBar(message) {
     _scaffoldKey.currentState.showSnackBar(new SnackBar(
@@ -276,6 +272,10 @@ class InventoryState extends State<Inventory> {
 
       InventoryItem item = inventory.items[itemIndex];
 
+      if (inventory.items[itemIndex].uploaded == 'true') {
+        continue;
+      }
+
       setState(() {
         item.uploading = 'true';
         item.progress = 0.0;
@@ -288,6 +288,7 @@ class InventoryState extends State<Inventory> {
         }
 
         InventoryItemPhoto photo = item.photos[photoIndex];
+
         await photo.upload('${itemIndex+1}-${photoIndex+1}');
         setState(() {
           item.progress = (photoIndex+1)/item.photos.length;
@@ -297,7 +298,7 @@ class InventoryState extends State<Inventory> {
       setState(() {
         item.progress = 1.0;
         item.uploading = 'false';
-        item.uploaded = 'true';
+        inventory.items[itemIndex].uploaded = 'true';
         inventory.save(widget.name);
         _snackBar('Images for ${item.name} saved');
       });
@@ -357,8 +358,36 @@ class InventoryState extends State<Inventory> {
 
     if (choice == 2) {
       // we need to prompt them to make sure
+      _removeDialog();
     }
 
+  }
+
+  void _removeDialog () {
+    showDialog(
+      context: context,
+      child: new AlertDialog(
+        title: new Text('Confirmation'),
+        content: new Text('Are you sure you want to delete "${widget.name}?"'),
+        actions: <Widget>[
+          new FlatButton(
+            child: new Text("CANCEL"),
+            onPressed: () => Navigator.pop(context),
+          ),
+          new FlatButton(
+            child: new Text("DELETE"),
+            onPressed: _removeInventory,
+          ),
+        ]
+      ),
+    );
+  }
+
+  void _removeInventory () async {
+    Navigator.pop(context);
+    await inventories.remove(widget.name);
+    Navigator.pop(context);
+    _snackBar('Inventory Removed');
   }
 
   Future<bool> _onWillPop () async => inventory.uploading == 'false';
@@ -366,7 +395,7 @@ class InventoryState extends State<Inventory> {
   @override
   Widget build(BuildContext context) {
 
-    if (!_loadedInv) loadInventory();
+    if (!_loaded) loadInventory();
     if (!_loadedSignal) loadSignal();
 
     return new WillPopScope(
