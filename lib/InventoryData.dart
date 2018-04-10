@@ -14,7 +14,6 @@ class InventoryData {
 
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   List<InventoryItem> items;
-
   Directory appDoc;
 
   static final InventoryData _singleton = new InventoryData._internal();
@@ -31,7 +30,8 @@ class InventoryData {
   Future<bool> save (name) async {
     final SharedPreferences prefs = await _prefs;
     prefs.setStringList(name, inventory.itemsToJson());
-    // await new Future.delayed(const Duration(seconds: 1));
+    prefs.setString('$name-uploaded', inventory.uploaded);
+    prefs.setString('$name-published', inventory.published);
     return true;
   }
 
@@ -47,6 +47,8 @@ class InventoryData {
     }
 
     inventory.items = items;
+    inventory.uploaded = prefs.getString('$name-uploaded');
+    inventory.published = prefs.getString('$name-published');
     appDoc = await getApplicationDocumentsDirectory();
     return items;
   }
@@ -138,7 +140,7 @@ class InventoryItem extends JsonDecoder {
       progress = json['progress'],
       photos = InventoryItemPhoto.jsonToPhotos(json['photos'].toList());
 
-  Map<String, dynamic> toJson() =>
+  Map<String, dynamic> toJson () =>
     {
       'name': name,
       'description': description,
@@ -163,8 +165,8 @@ class InventoryItemPhoto extends JsonDecoder {
       url = json['url'],
       thumbnail = json['thumbnail'];
 
-  Map<String, dynamic> toJson() =>
-    { 'path': path, 'url': url, 'thumbnail': thumbnail};
+  Map<String, dynamic> toJson () =>
+    { 'path': path, 'url': url, 'thumbnail': thumbnail };
 
 
   static photosToJson(photos) {

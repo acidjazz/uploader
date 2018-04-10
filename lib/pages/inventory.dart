@@ -250,6 +250,9 @@ class InventoryState extends State<Inventory> {
     Navigator.pop(context);
 
     inventory.post(workspaceId);
+    inventory.published = 'true';
+    _bottomBarIndex();
+    inventory.save(widget.name);
     setState(() => _snackBar('Inventory successfully published'));
 
   }
@@ -320,10 +323,17 @@ class InventoryState extends State<Inventory> {
   }
 
   int _bottomBarIndex () {
+
+    if (inventory.published == 'true') {
+      setState(() => _bottomIndex = 2);
+      return 2;
+    }
+
     if (inventory.uploaded == 'true') {
       setState(() => _bottomIndex = 1);
       return 1;
     }
+
     setState(() => _bottomIndex = 0);
     return 0;
   }
@@ -338,8 +348,17 @@ class InventoryState extends State<Inventory> {
       }
     }
 
-    print('BOTTOMBAR');
-    print(choice);
+    if (choice == 1) {
+      if (inventory.uploaded != 'true') {
+        return _snackBar('You must upload photos first.');
+      }
+      _publishDialog();
+    }
+
+    if (choice == 2) {
+      // we need to prompt them to make sure
+    }
+
   }
 
   Future<bool> _onWillPop () async => inventory.uploading == 'false';
@@ -371,8 +390,8 @@ class InventoryState extends State<Inventory> {
           currentIndex: _bottomIndex,
           items: [
             new BottomNavigationBarItem(
-              icon: new Icon(Icons.file_upload),
-              title: new Text('Upload Photos'),
+              icon: new Icon(inventory.uploading == 'true' ? Icons.cancel : Icons.file_upload),
+              title: new Text(inventory.uploading == 'true' ? 'Cancel Upload' : 'Upload Photos'),
             ),
             new BottomNavigationBarItem(
               icon: new Icon(Icons.cloud_upload),
