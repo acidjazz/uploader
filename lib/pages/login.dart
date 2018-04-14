@@ -37,13 +37,13 @@ class LoginState extends State<Login> {
       form.save();
       anon = await _auth.signInAnonymously();
       await user.save();
-      Navigator.of(context).pushReplacementNamed('/home');
+      Navigator.of(context).pushReplacementNamed('/inventories');
     }
   }
 
   String _validateEmail(String value) {
     if (value.isEmpty)
-      return 'E-mail address is required';
+      return 'Workgroup is required';
     return null;
   }
 
@@ -82,14 +82,14 @@ class LoginState extends State<Login> {
 
                     new TextFormField(
                       decoration: const InputDecoration(
-                        icon: const Icon(Icons.email),
-                        hintText: 'Your email Address',
-                        labelText: 'E-mail',
+                        icon: const Icon(Icons.group),
+                        hintText: 'Your WorkGroup',
+                        labelText: 'Your WorkGroup',
                       ),
                       initialValue: user.email,
-                      keyboardType: TextInputType.emailAddress,
+                      keyboardType: TextInputType.text,
                       onSaved: (String value) {
-                        user.email = value;
+                        user.email = value.toLowerCase();
                       },
                       validator: _validateEmail,
                     ),

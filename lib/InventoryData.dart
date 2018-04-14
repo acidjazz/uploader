@@ -195,21 +195,26 @@ class InventoryItemPhoto extends JsonDecoder {
       quality: 80,
       percentage: 50);
 
-    // running decodeImage() in isolation due to delay
+    /* running decodeImage() in isolation due to delay
     ReceivePort receivePort = new ReceivePort();
     await Isolate.spawn(decode, new DecodeParam(file, receivePort.sendPort));
     Image image = await receivePort.first;
+    */
 
-
-    // running deocdeImage() inline freezes the app/prgoress
+    // running decodeImage() inline freezes the app/prgoress
     // Image image = decodeImage(file.readAsBytesSync());
 
+    /*
     this.thumbnail =
     await uploadFile('$index-thumbnail-${file.uri.pathSegments.last.replaceAll('_compressed', '')}',
       copyResize(image, 240), file.parent.path);
 
     this.url = await uploadFile('$index-${file.uri.pathSegments.last.replaceAll('_compressed', '')}',
       copyResize(image, 640), file.parent.path);
+    */
+
+    this.url = await uploadFile('$index-${file.uri.pathSegments.last}', file, file.parent.path);
+    this.thumbnail = this.url;
 
     return true;
   }
@@ -219,9 +224,9 @@ class InventoryItemPhoto extends JsonDecoder {
     param.sendPort.send(image);
   }
 
-  uploadFile(name, image, path) async {
-    new File('$path/$name').writeAsBytesSync(encodeJpg(image));
-    File file = new File('$path/$name');
+  uploadFile(name, file, path) async {
+    //new File('$path/$name').writeAsBytesSync(encodeJpg(image));
+    //File file = new File('$path/$name');
 
     final StorageReference ref =
       FirebaseStorage.instance.ref().child('folder/$name');

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:maxanet_uploader/InventoriesData.dart';
+import 'package:maxanet_uploader/UserData.dart';
 import '../InventoryData.dart';
 import 'inventoryModify.dart';
 import 'package:connectivity/connectivity.dart';
@@ -32,6 +33,7 @@ class InventoryState extends State<Inventory> {
   loadInventory () async {
     await inventory.load(widget.name);
     _bottomBarIndex();
+    user.load();
     setState(() { _loaded = true; });
   }
 
@@ -211,9 +213,10 @@ class InventoryState extends State<Inventory> {
         content: new Form(
           key: _formKey,
           child: new TextFormField(
-            decoration: const InputDecoration(
-              icon: const Icon(Icons.bookmark),
+            decoration: new InputDecoration(
+              labelText: '${user.email}-#',
             ),
+            keyboardType: TextInputType.number,
             onSaved: (String value) { workspaceId = value; },
             validator: _validateWorkspaceId,
             autofocus: true,
