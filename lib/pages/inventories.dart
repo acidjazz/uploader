@@ -50,7 +50,7 @@ class InventoriesState extends State<Inventories> {
     // modal that prompts them the name/label
     showDialog(
       context: context,
-      child: new _SystemPadding(child: new AlertDialog(
+      child: new AlertDialog(
         title: new Text("Inventory Name"),
         content: new Form(
           key: _formKey,
@@ -76,7 +76,7 @@ class InventoriesState extends State<Inventories> {
             onPressed: _addHandler,
           ),
         ]
-      )),
+      ),
     );
   }
 

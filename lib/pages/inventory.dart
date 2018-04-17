@@ -11,6 +11,7 @@ import 'package:connectivity/connectivity.dart';
 class Inventory extends StatefulWidget {
   final String name;
   Inventory(this.name);
+
   @override
   InventoryState createState() => new InventoryState();
 }
@@ -25,19 +26,19 @@ class InventoryState extends State<Inventory> {
 
   int _bottomIndex = 0;
 
-  var workspaceId;
+  String workspaceId;
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  loadInventory () async {
+  Future<void> loadInventory () async {
     await inventory.load(widget.name);
     _bottomBarIndex();
     user.load();
     setState(() { _loaded = true; });
   }
 
-  loadSignal () async {
+  void loadSignal () async {
     var result = await (new Connectivity().checkConnectivity());
     _connection = setConnectivity(result);
     setState(() { _loadedSignal = true; });
@@ -51,7 +52,7 @@ class InventoryState extends State<Inventory> {
 
   }
 
-  setConnectivity (ConnectivityResult result) {
+  IconData setConnectivity (ConnectivityResult result) {
     if (result == ConnectivityResult.mobile) {
       _internet = true;
       return Icons.signal_cellular_4_bar;
@@ -64,7 +65,7 @@ class InventoryState extends State<Inventory> {
     }
   }
 
-  _body () {
+  Widget _body () {
     if (_loaded) {
       if (inventory.items.length < 1) {
         return new Center(
@@ -79,27 +80,25 @@ class InventoryState extends State<Inventory> {
     }
   }
 
-  _inventoryWidget () {
+  Widget _inventoryWidget () {
     return new ListView(
-      children: inventory.items.map((InventoryItem item)
+      children: inventory.items.map((item)
         => _listProgressTile(item)).toList(),
     );
   }
 
-  _listProgressTile(InventoryItem item) {
+  Widget _listProgressTile(item) {
     double _progress = item.progress;
     return new Stack(
       alignment: Alignment.bottomCenter,
-      children: [
+      children: <Widget>[
         _listTile(item),
         new LinearProgressIndicator(value: _progress),
       ]
-
     );
-
   }
 
-  _leading(InventoryItem item) {
+  Widget _leading(item) {
 
     if (item.uploading == 'true') {
       return new CircularProgressIndicator();
@@ -112,7 +111,7 @@ class InventoryState extends State<Inventory> {
     return new Icon(Icons.file_upload);
   }
 
-  _listTile(InventoryItem item) {
+  Widget _listTile(item) {
     return new ListTile(
       title: new Text(item.name),
       subtitle: new Text(item.description),
@@ -127,8 +126,8 @@ class InventoryState extends State<Inventory> {
           overflow: Overflow.visible,
           children: item.photos.getRange(0,
             item.photos.length > 2 ? 3 : item.photos.length)
-              .toList().reversed.map((photo) {
-            return new Positioned(
+              .toList().reversed.map((photo) =>
+            new Positioned(
               right: 20.0*item.photos.indexOf(photo),
               width: 60.0,
               height: 60.0,
@@ -144,14 +143,14 @@ class InventoryState extends State<Inventory> {
                   ),
                 ),
               ),
-            );
-          }).toList(),
+            ),
+          ).toList(),
         ),
       ),
     );
   }
 
-  _toInventoryModify (int index, InventoryItem item) async {
+  Future<Null> _toInventoryModify (int index, item) async {
     await Navigator.of(context).push(
       new MaterialPageRoute(
         fullscreenDialog: true,
@@ -161,7 +160,7 @@ class InventoryState extends State<Inventory> {
     _loaded = false;
   }
 
-  _toInventoryCreate () async {
+  Future<Null> _toInventoryCreate () async {
     await Navigator.of(context).push(
       new MaterialPageRoute(
         fullscreenDialog: true,
@@ -170,13 +169,13 @@ class InventoryState extends State<Inventory> {
     );
     _loaded = false;
   }
-  _snackBar(message) {
+  void _snackBar(message) {
     _scaffoldKey.currentState.showSnackBar(new SnackBar(
       content: new Text(message),
     ));
   }
 
-  _canAction () {
+  String _canAction () {
 
     if (inventory.items == null) {
       return 'Inventory not loaded yet';
@@ -194,7 +193,7 @@ class InventoryState extends State<Inventory> {
   }
 
 
-  _cancelUpload () {
+  void _cancelUpload () {
     inventory.cancel = 'true';
   }
 
@@ -205,7 +204,7 @@ class InventoryState extends State<Inventory> {
     return null;
   }
 
-  _publishDialog () {
+  void _publishDialog () {
     showDialog(
       context: context,
       child: new _SystemPadding(child: new AlertDialog(
@@ -223,7 +222,7 @@ class InventoryState extends State<Inventory> {
 
           ),
         ),
-        actions: <Widget>[
+        actions: [
           new FlatButton(
             child: new Text("CANCEL"),
             onPressed: () => Navigator.pop(context),
@@ -237,7 +236,7 @@ class InventoryState extends State<Inventory> {
     );
   }
 
-  _publishItems () async {
+  Future<bool> _publishItems () async {
 
     final FormState form = _formKey.currentState;
     form.save();
@@ -255,7 +254,7 @@ class InventoryState extends State<Inventory> {
     setState(() => _snackBar('Inventory successfully published'));
 
   }
-  _uploadItems () async {
+  Future<bool> _uploadItems () async {
 
     if (_canAction() != null) {
       _snackBar(_canAction());
@@ -343,7 +342,7 @@ class InventoryState extends State<Inventory> {
   }
 
 
-  _bottomBar (choice) {
+  void _bottomBar (choice) {
     if (choice == 0) {
       if (inventory.uploading == 'true') {
         _cancelUpload();
@@ -372,7 +371,7 @@ class InventoryState extends State<Inventory> {
       child: new AlertDialog(
         title: new Text('Confirmation'),
         content: new Text('Are you sure you want to delete "${widget.name}?"'),
-        actions: <Widget>[
+        actions: [
           new FlatButton(
             child: new Text("CANCEL"),
             onPressed: () => Navigator.pop(context),
@@ -386,7 +385,7 @@ class InventoryState extends State<Inventory> {
     );
   }
 
-  void _removeInventory () async {
+  Future<Null> _removeInventory () async {
     Navigator.pop(context);
     await inventories.remove(widget.name);
     Navigator.pop(context);
@@ -407,7 +406,7 @@ class InventoryState extends State<Inventory> {
         key: _scaffoldKey,
         appBar: new AppBar(
           title: new Text(widget.name),
-          actions: <Widget>[
+          actions: [
             new Icon(_connection),
           ]
         ),
@@ -422,8 +421,10 @@ class InventoryState extends State<Inventory> {
           currentIndex: _bottomIndex,
           items: [
             new BottomNavigationBarItem(
-              icon: new Icon(inventory.uploading == 'true' ? Icons.cancel : Icons.file_upload),
-              title: new Text(inventory.uploading == 'true' ? 'Cancel Upload' : 'Upload Photos'),
+              icon: new Icon(
+                inventory.uploading == 'true' ? Icons.cancel : Icons.file_upload),
+              title: new Text(
+                inventory.uploading == 'true' ? 'Cancel Upload' : 'Upload Photos'),
             ),
             new BottomNavigationBarItem(
               icon: new Icon(Icons.cloud_upload),

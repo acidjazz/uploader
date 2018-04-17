@@ -35,7 +35,7 @@ packages:
       name: barback
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.15.2+14"
+    version: "0.15.2+15"
   boolean_selector:
     dependency: transitive
     description:
@@ -119,7 +119,7 @@ packages:
       name: firebase_auth
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.3"
+    version: "0.5.4"
   firebase_core:
     dependency: "direct dev"
     description:
@@ -133,7 +133,7 @@ packages:
       name: firebase_storage
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.0"
+    version: "0.2.2"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -180,7 +180,7 @@ packages:
       name: google_sign_in
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
   html:
     dependency: transitive
     description:
@@ -279,13 +279,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.6"
-  mockito:
-    dependency: transitive
-    description:
-      name: mockito
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.2.3"
   multi_server_socket:
     dependency: transitive
     description:
@@ -458,7 +451,7 @@ packages:
       name: test
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.32+1"
+    version: "0.12.32+2"
   typed_data:
     dependency: transitive
     description:

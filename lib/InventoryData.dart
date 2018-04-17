@@ -59,31 +59,29 @@ class InventoryData {
     return true;
   }
 
-  path(file) {
+  String path(file) {
     return '${appDoc.path}/$file';
   }
 
-  itemsToJson() {
+  List<String> itemsToJson() {
     return inventory.items.map((InventoryItem item) {
-      return item.toJson();
-    }).toList(growable: true);
+      return json.encode(item.toJson());
+    }).toList();
   }
 
-  jsonToItems(items) {
-    return items.map((item) {
-      return new InventoryItem.fromJson(item);
-    }).toList(growable: true);
+  List<InventoryItem> jsonToItems(List<String> items) {
+    return items.map((item) => new InventoryItem.fromJson(json.decode(item))).toList();
   }
 
   toCSV () {
 
     List row = [];
     for (var itemIndex = 0; itemIndex < this.items.length; itemIndex++) {
-      InventoryItem item = this.items[itemIndex];
+      var item = this.items[itemIndex];
       List photos = [];
       List thumbnails = [];
       for (var photoIndex = 0; photoIndex < item.photos.length; photoIndex++) {
-        InventoryItemPhoto photo = item.photos[photoIndex];
+        var photo = item.photos[photoIndex];
         photos.add(photo.url);
         thumbnails.add(photo.thumbnail);
       }
@@ -119,9 +117,9 @@ class InventoryData {
 
 }
 
-class InventoryItem extends JsonDecoder {
+class InventoryItem {
 
-  List<InventoryItemPhoto> photos = <InventoryItemPhoto>[];
+  List<InventoryItemPhoto> photos = [];
   String name;
   String description;
   String category;
@@ -138,7 +136,7 @@ class InventoryItem extends JsonDecoder {
       category = json['category'],
       uploaded = json['uploaded'],
       progress = json['progress'],
-      photos = InventoryItemPhoto.jsonToPhotos(json['photos'].toList());
+      photos = InventoryItemPhoto.fromList(json['photos'] as List<dynamic>);
 
   Map<String, dynamic> toJson () =>
     {
@@ -147,7 +145,7 @@ class InventoryItem extends JsonDecoder {
       'category': category,
       'uploaded': uploaded,
       'progress': progress,
-      'photos': InventoryItemPhoto.photosToJson(photos),
+      'photos': photos,
     };
 }
 
@@ -157,8 +155,8 @@ class InventoryItemPhoto extends JsonDecoder {
   String url;
   String thumbnail;
 
-
   InventoryItemPhoto(this.path, this.url, this.thumbnail);
+
 
   InventoryItemPhoto.fromJson(Map<String, dynamic> json)
     : path = json['path'],
@@ -168,32 +166,20 @@ class InventoryItemPhoto extends JsonDecoder {
   Map<String, dynamic> toJson () =>
     { 'path': path, 'url': url, 'thumbnail': thumbnail };
 
-
-  static photosToJson(photos) {
-    return photos.map((InventoryItemPhoto photo) {
-      return photo.toJson();
-    }).toList(growable: true);
-  }
-
-  static jsonToPhotos(photos) {
-    return photos.map((photo) {
-      return new InventoryItemPhoto.fromJson(photo);
-    }).toList(growable: true);
-  }
+  static List<InventoryItemPhoto> fromList(List<dynamic> photos) =>
+    photos.map((photo) =>
+      new InventoryItemPhoto.fromJson(photo as Map<String, dynamic>)).toList();
 
   upload(index) async {
 
-    // w/out isolation a delay helps w/ progress bars
-    // await new Future.delayed(const Duration(seconds: 1));
-
     // grabbing the file as a whole
-    // final File file = new File(inventory.path(this.path));
+    final File file = new File(inventory.path(this.path));
 
-    // grabbing the file via a package that compresses it natively for speed purposes
-
+    /* grabbing the file via a package that compresses it natively for speed purposes
     final File file = await FlutterNativeImage.compressImage(inventory.path(this.path),
       quality: 80,
       percentage: 50);
+    */
 
     /* running decodeImage() in isolation due to delay
     ReceivePort receivePort = new ReceivePort();
@@ -225,6 +211,25 @@ class InventoryItemPhoto extends JsonDecoder {
   }
 
   uploadFile(name, file, path) async {
+
+    final Uri uri = Uri.parse("http://localhost:8000/");
+    final request = new http.MultipartRequest("POST", uri);
+
+    request.fields['ftp-host'] = 'apptest.maxanet.com';
+    request.fields['ftp-user'] = 'apptest';
+    request.fields['ftp-password'] = 'aptst0413';
+    request.files.add(new http.MultipartFile.fromBytes(name, file.readAsBytesSync()));
+
+    request.send().then((response) {
+      response.stream.transform(UTF8.decoder).listen((data) {
+        print(data);
+      });
+    });
+
+  }
+
+  /*
+  uploadFile(name, file, path) async {
     //new File('$path/$name').writeAsBytesSync(encodeJpg(image));
     //File file = new File('$path/$name');
 
@@ -235,6 +240,7 @@ class InventoryItemPhoto extends JsonDecoder {
     file.delete();
     return downloadUrl.path;
   }
+  */
 
 }
 

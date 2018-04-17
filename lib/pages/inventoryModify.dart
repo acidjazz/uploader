@@ -106,31 +106,25 @@ class InventoryModifyState extends State<InventoryModify> {
   }
 
   Widget addPhotosWidget () {
-    return new GestureDetector(
-      onTap: () { addPhoto(); },
-      child: new GridTile(
+    return new GridTile(
+      child: new GestureDetector(
+        onTap: () => addPhoto(),
         child: new Container(
           child: new Icon(Icons.add_a_photo, size: 30.0, color: Colors.blue),
             decoration: new BoxDecoration(
               border: new Border.all(width: 1.0, color: Colors.blue),
-              /*
-              color: Colors.white,
-              border: new Border.all(width: 1.0, color: Colors.blue),
-              borderRadius: new BorderRadius.all(new Radius.circular(1.0)),
-              boxShadow: [ new BoxShadow(color: Colors.blue, blurRadius: 3.0) ],
-              var*/
           ),
         ),
       ),
     );
   }
 
-  List<Widget> photosWidget () {
+  List<dynamic> photosWidget () {
 
-    var photos = item.photos.map((InventoryItemPhoto photo) {
+    var photos = item.photos.map((photo) {
       return new GridTile(
         header: new GestureDetector(
-          onTap: () { removePhoto(photo); },
+          onTap: () => removePhoto(photo),
           child: new GridTileBar(
             leading: new Container(
               padding: new EdgeInsets.all(6.0),

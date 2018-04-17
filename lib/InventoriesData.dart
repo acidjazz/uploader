@@ -1,43 +1,51 @@
 import 'dart:async';
-import 'dart:convert';
+import 'dart:convert' show json;
 import 'package:maxanet_uploader/InventoryData.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+var inventories = new InventoriesData._();
 
 class InventoriesData {
+
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  List<InventoriesItem> items;
+  List<InventoriesItem> items = new List<InventoriesItem>();
+  static const Key = 'inventories';
 
-  static final InventoriesData _singleton = new InventoriesData._internal();
-  InventoriesData._internal();
+  InventoriesData._();
 
-  static InventoriesData get instance => _singleton;
+  Map<String, dynamic> toJson() => {'items': items};
+
+  List<InventoriesItem> fromJson(Map<String, dynamic> json) {
+    List<InventoriesItem> items;
+    if (json == null) {
+      items = <InventoriesItem> [];
+    } else {
+      items = (json['items'] as List<dynamic>).map((item) =>
+        new InventoriesItem.fromJson(item as Map<String, dynamic>) ).toList();
+    }
+    return items;
+  }
 
   Future<bool> save() async {
     final SharedPreferences prefs = await _prefs;
-    prefs.setStringList('inventories', inventories.itemsToJson());
-    // await new Future.delayed(const Duration(seconds: 1));
+    prefs.setString(Key, json.encode(inventories));
     return true;
   }
 
   Future<bool> load() async {
     final SharedPreferences prefs = await _prefs;
-    if (prefs.getStringList('inventories') == null) {
-      inventories.items = new List<InventoriesItem>();
-    } else {
-      inventories.items = jsonToItems(prefs.getStringList('inventories'));
+    final result = prefs.getString(Key);
+
+    if (result == null) {
+      return false;
     }
+
+    items = fromJson(json.decode(result));
 
     for (var i = 0; i < inventories.items.length; i++) {
       inventories.items[i].data = await inventory.load(inventories.items[i].name);
     }
-    /*
-    inventories.items.map((item) async {
-      item.data = await inventory.load(item.name);
-    });
-    */
 
-    // await new Future.delayed(const Duration(seconds: 1));
     return true;
   }
 
@@ -54,21 +62,10 @@ class InventoriesData {
     return true;
   }
 
-  itemsToJson() {
-    return inventories.items.map((InventoriesItem item) {
-      return item.toJson();
-    }).toList(growable: true);
-  }
-
-  jsonToItems(items) {
-    return items.map((item) {
-      return new InventoriesItem.fromJson(item);
-    }).toList(growable: true);
-  }
-
 }
 
-class InventoriesItem extends JsonDecoder {
+class InventoriesItem {
+
   String name;
   List<InventoryItem> data;
   InventoriesItem(this.name);
@@ -86,10 +83,9 @@ class InventoriesItem extends JsonDecoder {
     return '$items items wtih $photos photos';
   }
 
-  InventoriesItem.fromJson(Map<String, dynamic> json)
-    : name = json['name'];
-  Map<String, dynamic> toJson() =>
-    { 'name': name, };
+  Map<String, dynamic> toJson() => {'name': name };
+
+  factory InventoriesItem.fromJson(json) => new InventoriesItem(json['name']);
+
 }
 
-var inventories = new InventoriesData._internal();
