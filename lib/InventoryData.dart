@@ -210,9 +210,9 @@ class InventoryItemPhoto extends JsonDecoder {
     param.sendPort.send(image);
   }
 
-  uploadFile(name, file, path) async {
+  Future<String> uploadFile(name, file, path) async {
 
-    final Uri uri = Uri.parse("http://localhost:8000/");
+    final Uri uri = new Uri.http("192.168.1.107:8000", "/");
     final request = new http.MultipartRequest("POST", uri);
 
     request.fields['ftp-host'] = 'apptest.maxanet.com';
@@ -220,11 +220,12 @@ class InventoryItemPhoto extends JsonDecoder {
     request.fields['ftp-password'] = 'aptst0413';
     request.files.add(new http.MultipartFile.fromBytes(name, file.readAsBytesSync()));
 
-    request.send().then((response) {
+    await request.send().then((response) {
       response.stream.transform(UTF8.decoder).listen((data) {
         print(data);
       });
     });
+    return name;
 
   }
 
