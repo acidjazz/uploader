@@ -65,13 +65,14 @@ class Controller extends BaseController
 
       $connection = ftp_connect($request->get('ftp-host'));
 
-      // required or we get 504 timeouts
-      ftp_pasv($connection, true);
 
       ftp_login(
         $connection,
         $request->get('ftp-user'),
         $request->get('ftp-password'));
+
+      // required or we get 504 timeouts
+      ftp_pasv($connection, true);
 
       $dirs = ftp_nlist($connection, '/html');
 
