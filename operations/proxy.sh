@@ -19,7 +19,13 @@ chmod 0700 /home/ec2-user/.ssh/config
 chown -R ec2-user:ec2-user /home/ec2-user/.ssh
 
 yum -y update
-yum -y install nginx git php71 php71-mbstring php71-fpm php71-pdo php71-mysqlnd 
+ amazon-linux-extras install nginx1.12 php7.2
+# yum -y install nginx git php71 php71-mbstring php71-fpm
+yum -y install git php-pear php-devel gcc ImageMagick ImageMagick-devel
+pecl install imagick
+echo "extension=imagick.so" > /etc/php.d/30-imagick.ini
+
+service php-fpm restart
 
 echo '
 user  nginx;
@@ -76,10 +82,10 @@ php -r "unlink('composer-setup.php');"
 
 su ec2-user -c "
 cd /var/www/html
-git clone git@github.com:pub-media/pub.git
-cd pub/api
+git clone git@github.com:maxanet/uploader.git
+cd uploader/proxy
 composer update
-aws s3 cp s3://pub-vault/api/env-staging .env
+aws s3 cp s3://maxanet-vault/env .env
 chmod -R 777 /var/www/html/pub/api/storage
 "
 service php-fpm start

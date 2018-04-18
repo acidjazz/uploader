@@ -23,3 +23,5 @@ packages
 /proxy/npm-debug.log
 /proxy/yarn-error.log
 /proxy/.env
+
+*.swp
