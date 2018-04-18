@@ -16,7 +16,7 @@ class Controller extends BaseController
   function verify (Request $request)
   {
 
-    $connection = ftp_connect($request->get('ftp-host'));
+    $connection = @ftp_connect($request->get('ftp-host'));
     if (!$connection) {
       return ['valid' => false];
     }

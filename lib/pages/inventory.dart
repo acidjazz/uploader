@@ -32,8 +32,8 @@ class InventoryState extends State<Inventory> {
 
   Future<void> loadInventory() async {
     await inventory.load(widget.name);
+    await user.load();
     _bottomBarIndex();
-    user.load();
     setState(() {
       _loaded = true;
     });
@@ -335,25 +335,33 @@ class InventoryState extends State<Inventory> {
     return 0;
   }
 
-  void _bottomBar(choice) {
+  bool _bottomBar(choice) {
+    if (user.ftpValid == 'false') {
+      _snackBar('Cannot upload or publish without valid FTP info');
+      return true;
+    }
     if (choice == 0) {
       if (inventory.uploading == 'true') {
         _cancelUpload();
       } else {
         _uploadItems();
       }
+      return true;
     }
 
     if (choice == 1) {
       if (inventory.uploaded != 'true') {
-        return _snackBar('You must upload photos first.');
+        _snackBar('You must upload photos first.');
+        return true;
       }
       _publishDialog();
+      return true;
     }
 
     if (choice == 2) {
       // we need to prompt them to make sure
       _removeDialog();
+      return true;
     }
   }
 

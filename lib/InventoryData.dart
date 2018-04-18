@@ -220,9 +220,9 @@ class InventoryItemPhoto extends JsonDecoder {
     print("UPLOADING");
     print(name);
 
-    request.fields['ftp-host'] = 'apptest.maxanet.com';
-    request.fields['ftp-user'] = 'apptest';
-    request.fields['ftp-password'] = 'aptst0413';
+    request.fields['ftp-host'] = user.ftpHost;
+    request.fields['ftp-user'] = user.ftpUsername;
+    request.fields['ftp-password'] = user.ftpPassword;
     request.fields['file-name'] = name;
     request.fields['file-extension'] = extension;
     request.fields['workspace'] = user.email;

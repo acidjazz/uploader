@@ -37,10 +37,10 @@ class LoginState extends State<Login> {
       form.save();
       anon = await _auth.signInAnonymously();
       await user.save();
-      if (user.ftpValid != 'true') {
-        Navigator.of(context).pushReplacementNamed('/settings');
-      } else {
+      if (user.ftpValid == 'true') {
         Navigator.of(context).pushReplacementNamed('/inventories');
+      } else {
+        Navigator.of(context).pushReplacementNamed('/settings');
       }
     }
   }
@@ -126,13 +126,8 @@ class LoginState extends State<Login> {
     } else {
       return new Scaffold(
         key: _scaffoldKey,
-        appBar: new AppBar(
-          title: new Text('Login to Maxanet'),
-        ),
-        body: new Center(
-          key: _formKey,
-          child: new CircularProgressIndicator(),
-        ),
+        appBar: new AppBar( title: new Text('Login to Maxanet')),
+        body: new Center( key: _formKey, child: new CircularProgressIndicator()),
       );
     }
   }

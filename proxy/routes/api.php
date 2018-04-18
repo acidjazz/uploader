@@ -13,6 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/verify', 'Controller@verify');
+Route::post('/verify', 'Controller@verify');
 Route::get('/', 'Controller@index');
 Route::post('/', 'Controller@index');
