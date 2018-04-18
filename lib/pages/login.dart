@@ -37,7 +37,11 @@ class LoginState extends State<Login> {
       form.save();
       anon = await _auth.signInAnonymously();
       await user.save();
-      Navigator.of(context).pushReplacementNamed('/inventories');
+      if (user.ftpValid != 'true') {
+        Navigator.of(context).pushReplacementNamed('/settings');
+      } else {
+        Navigator.of(context).pushReplacementNamed('/inventories');
+      }
     }
   }
 
@@ -79,7 +83,6 @@ class LoginState extends State<Login> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     new Image.asset('images/icon-small.png', width: 100.0),
-
                     new TextFormField(
                       decoration: const InputDecoration(
                         icon: const Icon(Icons.group),
@@ -93,7 +96,6 @@ class LoginState extends State<Login> {
                       },
                       validator: _validateEmail,
                     ),
-
                     new TextFormField(
                       decoration: const InputDecoration(
                         icon: const Icon(Icons.lock),
@@ -107,7 +109,6 @@ class LoginState extends State<Login> {
                       },
                       validator: _validatePassword,
                     ),
-
                     new Container(
                       padding: const EdgeInsets.all(20.0),
                       alignment: Alignment.center,

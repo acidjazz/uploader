@@ -9,6 +9,10 @@ class UserData {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   String email = '';
   String password = '';
+  String ftpHost = '';
+  String ftpUsername = '';
+  String ftpPassword = '';
+  String ftpValid = 'false';
 
   static final UserData _singleton = new UserData._internal();
   UserData._internal();
@@ -16,23 +20,22 @@ class UserData {
 
   load () async {
     final SharedPreferences prefs = await _prefs;
-
-    if (prefs.getString('email') != null &&
-        prefs.getString('password') != null) {
-      this.email = prefs.getString('email');
-      this.password = prefs.getString('password');
-    }
-
-    await new Future.delayed(const Duration(seconds: 1));
+    this.email = prefs.getString('email');
+    this.password = prefs.getString('password');
+    this.ftpHost = prefs.getString('ftpHost');
+    this.ftpUsername = prefs.getString('ftpUsername');
+    this.ftpPassword = prefs.getString('ftpPassword');
+    this.ftpValid = prefs.getString('ftpValid');
     return true;
-
   }
 
   Future<bool> save () async {
     final SharedPreferences prefs = await _prefs;
     prefs.setString('email', this.email);
     prefs.setString('password', this.password);
-    await new Future.delayed(const Duration(seconds: 1));
+    prefs.setString('ftpHost', this.ftpHost);
+    prefs.setString('ftpUsername', this.ftpUsername);
+    prefs.setString('ftpValid', this.ftpValid);
     return true;
   }
 
@@ -42,7 +45,6 @@ class UserData {
     prefs.remove('password');
     this.email = '';
     this.password = '';
-    await new Future.delayed(const Duration(seconds: 2));
     return true;
   }
 }
