@@ -13,6 +13,24 @@ class Controller extends BaseController
 {
   use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+  function verify (Request $request)
+  {
+
+    $connection = ftp_connect($request->get('ftp-host'));
+    if (!$connection) {
+      return ['valid' => false];
+    }
+
+    if (@ftp_login(
+      $connection,
+      $request->get('ftp-user'),
+      $request->get('ftp-password'))) {
+      return ['valid' => true];
+    }
+
+    return ['valid' => false];
+  }
+
   function index (Request $request) {
 
     if (isset($request->file)) {
@@ -21,19 +39,19 @@ class Controller extends BaseController
       $imageName = $request->get('file-name') . '.' . $request->get('file-extension');
       $thumbnailName = $request->get('file-name') . 't.' . $request->get('file-extension');
 
-      $tmpdir = tempnam(sys_get_temp_dir(), 'maxanet_');
+      $tmpDir = tempnam(sys_get_temp_dir(), 'maxanet_');
 
       $image = new \Imagick($request->file->getPathname());
       $image->thumbnailImage(640, 480, true);
-      $image->writeImage($tmpdir.$imageName);
+      $image->writeImage($tmpDir.$imageName);
 
       $thumbnail = new \Imagick($request->file->getPathname());
       $thumbnail->thumbnailImage(240, 240, true);
-      $thumbnail->writeImage($tmpdir.$thumbnailName);
+      $thumbnail->writeImage($tmpDir.$thumbnailName);
 
       /*
       header('Content-Type: image/jpeg');
-      $test = new \Imagick($tmpdir.$imageName);
+      $test = new \Imagick($tmpDir.$imageName);
       echo $test->getImageBlob();
       */
 
@@ -53,14 +71,14 @@ class Controller extends BaseController
       ftp_put(
         $connection,
         $dir.$imageName,
-        $tmpdir.$imageName,
+        $tmpDir.$imageName,
         FTP_BINARY
       );
 
       ftp_put(
         $connection,
         $dir.$thumbnailName,
-        $tmpdir.$thumbnailName,
+        $tmpDir.$thumbnailName,
         FTP_BINARY
       );
 

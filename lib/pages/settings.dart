@@ -1,9 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:maxanet_uploader/HomeDrawer.dart';
 import 'package:maxanet_uploader/UserData.dart';
-
 
 class Settings extends StatefulWidget {
   @override
