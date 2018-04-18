@@ -15,4 +15,4 @@ use Illuminate\Http\Request;
 
 Route::post('/verify', 'Controller@verify');
 Route::get('/', 'Controller@index');
-Route::post('/', 'Controller@index');
+Route::post('/upload', 'Controller@upload');

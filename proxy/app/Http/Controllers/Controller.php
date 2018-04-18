@@ -7,6 +7,8 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
+
 // use Illuminate\Support\Facades\Log;
 
 class Controller extends BaseController
@@ -31,7 +33,13 @@ class Controller extends BaseController
     return ['valid' => false];
   }
 
-  function index (Request $request) {
+  function index(Request $request) {
+     Artisan::call('route:list');
+    return '<pre>'.Artisan::Output().'</pre>';
+
+  }
+
+  function upload (Request $request) {
 
     if (isset($request->file)) {
 

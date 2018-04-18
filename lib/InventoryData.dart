@@ -176,11 +176,6 @@ class InventoryItemPhoto extends JsonDecoder {
     // grabbing the file as a whole
     // final File file = new File(inventory.path(this.path));
 
-    /* grabbing the file via a package that compresses it natively for speed purposes
-    final File file = await FlutterNativeImage.compressImage(inventory.path(this.path),
-      quality: 80,
-      percentage: 50);
-    */
 
     /* running decodeImage() in isolation due to delay
     ReceivePort receivePort = new ReceivePort();
@@ -200,6 +195,12 @@ class InventoryItemPhoto extends JsonDecoder {
       copyResize(image, 640), file.parent.path);
     */
 
+    /* grabbing the file via a package that compresses it natively for speed purposes
+    final File file = await FlutterNativeImage.compressImage(inventory.path(this.path),
+      quality: 80,
+      percentage: 50);
+    */
+
     final File file = new File(inventory.path(this.path));
     this.url = await uploadFile(index, file.uri.pathSegments.last.split('.').last, file, file.parent.path);
     this.thumbnail = this.url;
@@ -214,8 +215,8 @@ class InventoryItemPhoto extends JsonDecoder {
 
   Future<String> uploadFile(name, extension, file, path) async {
 
-    final Uri uri = new Uri.http("192.168.1.107:8000", "/");
-    // final Uri uri = new Uri.http("ec2-52-90-192-206.compute-1.amazonaws.com", "/");
+    // final Uri uri = new Uri.http("192.168.1.107:8000", "/upload");
+    final Uri uri = new Uri.http("ec2-52-90-192-206.compute-1.amazonaws.com", "/upload");
     final request = new http.MultipartRequest("POST", uri);
     print("UPLOADING");
     print(name);
@@ -226,7 +227,6 @@ class InventoryItemPhoto extends JsonDecoder {
     request.fields['file-name'] = name;
     request.fields['file-extension'] = extension;
     request.fields['workspace'] = user.email;
-    //request.files.add(new http.MultipartFile.fromBytes(name, file.readAsBytesSync()));
     request.files.add(await http.MultipartFile.fromPath('file', file.path));
 
     await request.send().then((response) {
@@ -235,6 +235,7 @@ class InventoryItemPhoto extends JsonDecoder {
         print(data);
       });
     });
+
     return name;
 
   }

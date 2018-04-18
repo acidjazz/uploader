@@ -52,8 +52,8 @@ class UserData {
   }
 
   Future verify (Function result) async {
-    final Uri uri = new Uri.http("192.168.1.107:8000", "/verify");
-    // final Uri uri = new Uri.http("ec2-52-90-192-206.compute-1.amazonaws.com", "/verify");
+    // final Uri uri = new Uri.http("192.168.1.107:8000", "/verify");
+    final Uri uri = new Uri.http("ec2-52-90-192-206.compute-1.amazonaws.com", "/verify");
     final request = new http.MultipartRequest('POST', uri);
     request.fields['ftp-host'] = user.ftpHost;
     request.fields['ftp-user'] = user.ftpUsername;
