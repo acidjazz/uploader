@@ -19,9 +19,9 @@ chmod 0700 /home/ec2-user/.ssh/config
 chown -R ec2-user:ec2-user /home/ec2-user/.ssh
 
 yum -y update
- amazon-linux-extras install nginx1.12 php7.2
+amazon-linux-extras install nginx1.12 php7.2
 # yum -y install nginx git php71 php71-mbstring php71-fpm
-yum -y install git php-pear php-devel gcc ImageMagick ImageMagick-devel
+yum -y install git php-pear php-devel gcc ImageMagick ImageMagick-devel php-mbstring
 pecl install imagick
 echo "extension=imagick.so" > /etc/php.d/30-imagick.ini
 
@@ -53,7 +53,7 @@ http {
     server_name  localhost;
     client_max_body_size 100m;
     client_body_timeout 180s;
-    root         /var/www/html/pub/api/public/;
+    root         /var/www/html/uploader/proxy/public/;
     location / {
       if (!-e $request_filename) {
         rewrite ^(.*)$ /index.php;
@@ -86,7 +86,7 @@ git clone git@github.com:maxanet/uploader.git
 cd uploader/proxy
 composer update
 aws s3 cp s3://maxanet-vault/env .env
-chmod -R 777 /var/www/html/pub/api/storage
+chmod -R 777 storage/
 "
 service php-fpm start
 service nginx start
