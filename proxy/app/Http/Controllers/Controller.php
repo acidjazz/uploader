@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class Controller extends BaseController
 {
@@ -14,9 +15,9 @@ class Controller extends BaseController
 
   function index (Request $request) {
 
-    if (isset($request->file) && $request->file !== null) {
+    if (isset($request->file)) {
 
-      $dir = '/'.$request->get('workspace').'/';
+      $dir = '/html/'.$request->get('workspace').'/';
       $imageName = $request->get('file-name') . '.' . $request->get('file-extension');
       $thumbnailName = $request->get('file-name') . 't.' . $request->get('file-extension');
 
@@ -43,10 +44,10 @@ class Controller extends BaseController
         $request->get('ftp-user'),
         $request->get('ftp-password'));
 
-      $dirs = ftp_nlist($connection, '/');
+      $dirs = ftp_nlist($connection, '/html');
 
-      if (!in_array('/'.$request->get('workspace'), $dirs)) {
-        ftp_mkdir($connection, $request->get('workspace'));
+      if (!in_array('/html/'.$request->get('workspace'), $dirs)) {
+        ftp_mkdir($connection, $dir);
       }
 
       ftp_put(

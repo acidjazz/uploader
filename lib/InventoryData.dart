@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:isolate';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:maxanet_uploader/UserData.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -173,7 +174,7 @@ class InventoryItemPhoto extends JsonDecoder {
   upload(index) async {
 
     // grabbing the file as a whole
-    final File file = new File(inventory.path(this.path));
+    // final File file = new File(inventory.path(this.path));
 
     /* grabbing the file via a package that compresses it natively for speed purposes
     final File file = await FlutterNativeImage.compressImage(inventory.path(this.path),
@@ -199,7 +200,8 @@ class InventoryItemPhoto extends JsonDecoder {
       copyResize(image, 640), file.parent.path);
     */
 
-    this.url = await uploadFile('$index-${file.uri.pathSegments.last}', file, file.parent.path);
+    final File file = new File(inventory.path(this.path));
+    this.url = await uploadFile(index, file.uri.pathSegments.last.split('.').last, file, file.parent.path);
     this.thumbnail = this.url;
 
     return true;
@@ -210,18 +212,26 @@ class InventoryItemPhoto extends JsonDecoder {
     param.sendPort.send(image);
   }
 
-  Future<String> uploadFile(name, file, path) async {
+  Future<String> uploadFile(name, extension, file, path) async {
 
     final Uri uri = new Uri.http("192.168.1.107:8000", "/");
+    // final Uri uri = new Uri.http("ec2-52-90-192-206.compute-1.amazonaws.com", "/");
     final request = new http.MultipartRequest("POST", uri);
+    print("UPLOADING");
+    print(name);
 
     request.fields['ftp-host'] = 'apptest.maxanet.com';
     request.fields['ftp-user'] = 'apptest';
     request.fields['ftp-password'] = 'aptst0413';
-    request.files.add(new http.MultipartFile.fromBytes(name, file.readAsBytesSync()));
+    request.fields['file-name'] = name;
+    request.fields['file-extension'] = extension;
+    request.fields['workspace'] = user.email;
+    //request.files.add(new http.MultipartFile.fromBytes(name, file.readAsBytesSync()));
+    request.files.add(await http.MultipartFile.fromPath('file', file.path));
 
     await request.send().then((response) {
       response.stream.transform(UTF8.decoder).listen((data) {
+        print('HERE COMES DATA');
         print(data);
       });
     });
