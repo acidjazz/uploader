@@ -195,16 +195,14 @@ class InventoryItemPhoto extends JsonDecoder {
       copyResize(image, 640), file.parent.path);
     */
 
-    /* grabbing the file via a package that compresses it natively for speed purposes
     final File file = await FlutterNativeImage.compressImage(inventory.path(this.path),
       quality: 80,
       percentage: 50);
-    */
+    // final File file = new File(inventory.path(this.path));
 
-    final File file = new File(inventory.path(this.path));
-    this.url = await uploadFile(index, file.uri.pathSegments.last.split('.').last, file, file.parent.path);
-    this.thumbnail = this.url;
-
+    await uploadFile(index, file.uri.pathSegments.last.split('.').last, file, file.parent.path);
+    print(this.url);
+    print(this.thumbnail);
     return true;
   }
 
@@ -230,10 +228,8 @@ class InventoryItemPhoto extends JsonDecoder {
 
     await request.send().then((response) {
       response.stream.transform(UTF8.decoder).listen((data) {
-        print('HERE COMES DATA');
-        print(data);
-        var decoded = json.decode(data);
-        print(decoded);
+        this.url = json.decode(data)['imageName'];
+        this.thumbnail = json.decode(data)['thumbnailName'];
       });
     });
 

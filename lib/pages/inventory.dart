@@ -296,8 +296,7 @@ class InventoryState extends State<Inventory> {
       setState(() {
         item.progress = 1.0;
         item.uploading = 'false';
-        // PUT THIS BACK
-        // inventory.items[itemIndex].uploaded = 'true';
+        inventory.items[itemIndex].uploaded = 'true';
         inventory.save(widget.name);
         _snackBar('Images for ${item.name} saved');
       });
