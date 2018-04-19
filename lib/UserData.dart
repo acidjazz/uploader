@@ -59,6 +59,8 @@ class UserData {
     request.fields['ftp-user'] = user.ftpUsername;
     request.fields['ftp-password'] = user.ftpPassword;
 
+    print('we are sending..');
+
     request.send().then((response) {
       response.stream.transform(UTF8.decoder).listen((data) {
         result(json.decode(data));

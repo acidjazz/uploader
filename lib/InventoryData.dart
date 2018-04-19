@@ -7,7 +7,6 @@ import 'package:http_parser/http_parser.dart';
 import 'package:maxanet_uploader/UserData.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image/image.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 
@@ -236,20 +235,6 @@ class InventoryItemPhoto extends JsonDecoder {
     return name;
 
   }
-
-  /*
-  uploadFile(name, file, path) async {
-    //new File('$path/$name').writeAsBytesSync(encodeJpg(image));
-    //File file = new File('$path/$name');
-
-    final StorageReference ref =
-      FirebaseStorage.instance.ref().child('folder/$name');
-    final StorageUploadTask uploadTask = ref.put(file);
-    final Uri downloadUrl = (await uploadTask.future).downloadUrl;
-    file.delete();
-    return downloadUrl.path;
-  }
-  */
 
 }
 
