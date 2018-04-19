@@ -218,8 +218,7 @@ class InventoryItemPhoto extends JsonDecoder {
     // final Uri uri = new Uri.http("192.168.1.107:8000", "/upload");
     final Uri uri = new Uri.http("ec2-52-90-192-206.compute-1.amazonaws.com", "/upload");
     final request = new http.MultipartRequest("POST", uri);
-    print("UPLOADING");
-    print(name);
+    print('UPLOADING $name ${file.path}');
 
     request.fields['ftp-host'] = user.ftpHost;
     request.fields['ftp-user'] = user.ftpUsername;
@@ -233,6 +232,8 @@ class InventoryItemPhoto extends JsonDecoder {
       response.stream.transform(UTF8.decoder).listen((data) {
         print('HERE COMES DATA');
         print(data);
+        var decoded = json.decode(data);
+        print(decoded);
       });
     });
 

@@ -46,14 +46,21 @@ class Controller extends BaseController
       $dir = '/html/'.$request->get('workspace').'/';
       $imageName = $request->get('file-name') . '.' . $request->get('file-extension');
       $thumbnailName = $request->get('file-name') . 't.' . $request->get('file-extension');
-
       $tmpDir = tempnam(sys_get_temp_dir(), 'maxanet_');
 
-      $image = new \Imagick($request->file->getPathname());
+      try {
+        $image = new \Imagick($request->file->getRealPath());
+      } catch (\ImagickException $e) {
+        return [$e->getCode() => $e->getMessage(), 'path' => $request->file->getRealPath()];
+      }
       $image->thumbnailImage(640, 480, true);
       $image->writeImage($tmpDir.$imageName);
 
-      $thumbnail = new \Imagick($request->file->getPathname());
+      try {
+        $thumbnail = new \Imagick($request->file->getRealPath());
+      } catch (\ImagickException $e) {
+        return [$e->getCode() => $e->getMessage(), 'path' => $request->file->getRealPath()];
+      }
       $thumbnail->thumbnailImage(240, 240, true);
       $thumbnail->writeImage($tmpDir.$thumbnailName);
 
@@ -94,7 +101,7 @@ class Controller extends BaseController
         FTP_BINARY
       );
 
-      return ftp_nlist($connection, '/');
+      return ['imageName' => $imageName, 'thumbnailName' => $thumbnailName];
 
     }
 
