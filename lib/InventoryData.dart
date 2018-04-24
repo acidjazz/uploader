@@ -99,7 +99,7 @@ class InventoryData {
     final request = new http.MultipartRequest("POST", uri);
 
     // request.fields['auction'] = 'exampled';
-    request.fields['auction'] = workspace;
+    request.fields['auction'] = '${user.email}$workspace';
     request.fields['remotepw'] = user.password;
     request.fields['delimiter'] = '|';
     request.fields['submit'] = '1';
