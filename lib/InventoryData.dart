@@ -93,12 +93,14 @@ class InventoryData {
 
   post (workspace) async {
 
+    await user.load();
+
     final Uri uri = Uri.parse("https://www.maxanet.com/cgi-bin/mrnewinv.cgi");
     final request = new http.MultipartRequest("POST", uri);
 
     // request.fields['auction'] = 'exampled';
     request.fields['auction'] = workspace;
-    request.fields['remotepw'] = 'nexd123pw4';
+    request.fields['remotepw'] = user.password;
     request.fields['delimiter'] = '|';
     request.fields['submit'] = '1';
     request.files.add(new http.MultipartFile.fromString(
