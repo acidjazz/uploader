@@ -59,7 +59,6 @@ class SettingsState extends State<Settings> {
     return null;
   }
 
-
   void init() async {
     await user.load();
     setState(() => _loaded = true);
@@ -87,7 +86,7 @@ class SettingsState extends State<Settings> {
           key: _formKey,
           child: new Container(
             padding: new EdgeInsets.symmetric(horizontal: 30.0, vertical: 30.0),
-            child: new Column(
+            child: new ListView(
               children: <Widget>[
                 new TextFormField(
                   decoration: const InputDecoration(
@@ -125,6 +124,30 @@ class SettingsState extends State<Settings> {
                     user.ftpPassword = value;
                   }
                 ),
+                new TextFormField(
+                  decoration: const InputDecoration(
+                    icon: const Icon(Icons.link),
+                    labelText: 'Publish URL',
+                  ),
+                  validator: _validateField,
+                  initialValue: user.publishURL,
+                  keyboardType: TextInputType.text,
+                  onSaved: (String value) {
+                    user.publishURL = value;
+                  }
+                ),
+                new TextFormField(
+                  decoration: const InputDecoration(
+                    icon: const Icon(Icons.link),
+                    labelText: 'Admin URL',
+                  ),
+                  // validator: _validateField,
+                  initialValue: user.adminURL,
+                  keyboardType: TextInputType.text,
+                  onSaved: (String value) {
+                    user.adminURL = value;
+                  }
+                ),
                 new Container(
                   padding: const EdgeInsets.all(20.0),
                   alignment: Alignment.center,
@@ -137,6 +160,8 @@ class SettingsState extends State<Settings> {
                     onPressed: _handleSave,
                   ),
                 ),
+
+
               ]
             ),
           ),

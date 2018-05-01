@@ -16,6 +16,9 @@ class UserData {
   String ftpPassword = '';
   String ftpValid = 'false';
 
+  String publishURL = '';
+  String adminURL = '';
+
   static final UserData _singleton = new UserData._internal();
   UserData._internal();
   static UserData get instance => _singleton;
@@ -28,6 +31,10 @@ class UserData {
     this.ftpUsername = prefs.getString('ftpUsername');
     this.ftpPassword = prefs.getString('ftpPassword');
     this.ftpValid = prefs.getString('ftpValid');
+
+    this.publishURL = prefs.getString('publishURL');
+    this.adminURL = prefs.getString('adminURL');
+
     return true;
   }
 
@@ -39,6 +46,9 @@ class UserData {
     prefs.setString('ftpUsername', this.ftpUsername);
     prefs.setString('ftpPassword', this.ftpPassword);
     prefs.setString('ftpValid', this.ftpValid);
+
+    prefs.setString('publishURL', this.publishURL);
+    prefs.setString('adminURL', this.adminURL);
     return true;
   }
 

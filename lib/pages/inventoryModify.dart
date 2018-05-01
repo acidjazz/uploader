@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:maxanet_uploader/InventoriesData.dart';
 import 'package:path_provider/path_provider.dart';
 import '../InventoryData.dart';
 
@@ -68,11 +69,12 @@ class InventoryModifyState extends State<InventoryModify> {
 
   String _validateName(String value) {
     if (value.isEmpty)
-      return 'Inventory name is required';
+      return 'Inventory number is required';
     return null;
   }
 
   String _validatePhotos() {
+    return null;
     if (item.photos.length < 1)
       return 'Please select at least one photo';
     return null;
@@ -207,12 +209,14 @@ class InventoryModifyState extends State<InventoryModify> {
                 new TextFormField(
                   decoration: const InputDecoration(
                     icon: const Icon(Icons.gavel),
-                    hintText: 'Your Item name',
-                    labelText: 'Item Name',
+                    hintText: 'Your Item Number',
+                    labelText: 'Item Number',
                   ),
-                  initialValue: item.name == null ? '' : item.name,
-                  onSaved: (String value) { item.name = value; },
+                  initialValue: item.number == null ? inventory.next() : item.number,
+                  onSaved: (String value) { item.number = value; },
                   validator: _validateName,
+                  enabled: false,
+                  keyboardType: TextInputType.numberWithOptions(),
                 ),
 
                 new TextFormField(

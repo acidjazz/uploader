@@ -52,6 +52,9 @@ class InventoryData {
     appDoc = await getApplicationDocumentsDirectory();
     return items;
   }
+  String next () {
+    return (inventory.items.length + 1).toString();
+  }
 
   Future<bool> remove (name) async {
     final SharedPreferences prefs = await _prefs;
@@ -85,17 +88,25 @@ class InventoryData {
         photos.add(photo.url);
         thumbnails.add(photo.thumbnail);
       }
-      row.add('${itemIndex + 1}|${item.category}|${item.description}||${photos.join(' ')}||1|${thumbnails.join(' ')}|');
+      row.add('${item.number}|${item.category}|${item.description}||${photos.join(' ')}||1|${thumbnails.join(' ')}|');
     }
     return row.join('\r\n');
 
   }
 
-  post (workspace) async {
+  post (workspace, respond) async {
 
     await user.load();
 
-    final Uri uri = Uri.parse("https://www.maxanet.com/cgi-bin/mrnewinv.cgi");
+    print('publish detail:');
+    print('url: ${user.publishURL}');
+    print('auction: ${user.email}$workspace');
+    print('remotepw: ${user.password}');
+    print('file:');;
+    print(this.toCSV());
+
+
+    final Uri uri = Uri.parse(user.publishURL);
     final request = new http.MultipartRequest("POST", uri);
 
     // request.fields['auction'] = 'exampled';
@@ -111,7 +122,11 @@ class InventoryData {
 
     request.send().then((response) {
       response.stream.transform(UTF8.decoder).listen((data) {
-        print(data);
+        respond(data
+          .replaceAll(new RegExp("<[^>]*>"), '')
+          .replaceAll("\n", '')
+          .replaceAll('Maxanet File Upload', '')
+          .trim());
       });
     });
 
@@ -122,7 +137,7 @@ class InventoryData {
 class InventoryItem {
 
   List<InventoryItemPhoto> photos = [];
-  String name;
+  String number;
   String description;
   String category;
   String uploaded = 'false';
@@ -133,7 +148,7 @@ class InventoryItem {
   InventoryItem();
 
   InventoryItem.fromJson(Map<String, dynamic> json)
-    : name = json['name'],
+    : number = json['number'],
       description = json['description'],
       category = json['category'],
       uploaded = json['uploaded'],
@@ -142,7 +157,7 @@ class InventoryItem {
 
   Map<String, dynamic> toJson () =>
     {
-      'name': name,
+      'number': number,
       'description': description,
       'category': category,
       'uploaded': uploaded,
@@ -172,7 +187,7 @@ class InventoryItemPhoto extends JsonDecoder {
     photos.map((photo) =>
       new InventoryItemPhoto.fromJson(photo as Map<String, dynamic>)).toList();
 
-  upload(index) async {
+  upload(number) async {
 
     // grabbing the file as a whole
     // final File file = new File(inventory.path(this.path));
@@ -189,7 +204,7 @@ class InventoryItemPhoto extends JsonDecoder {
 
     /*
     this.thumbnail =
-    await uploadFile('$index-thumbnail-${file.uri.pathSegments.last.replaceAll('_compressed', '')}',
+    await uploadFile('$number-thumbnail-${file.uri.pathSegments.last.replaceAll('_compressed', '')}',
       copyResize(image, 240), file.parent.path);
 
     this.url = await uploadFile('$index-${file.uri.pathSegments.last.replaceAll('_compressed', '')}',
@@ -201,7 +216,7 @@ class InventoryItemPhoto extends JsonDecoder {
       percentage: 50);
     // final File file = new File(inventory.path(this.path));
 
-    await uploadFile(index, file.uri.pathSegments.last.split('.').last, file, file.parent.path);
+    await uploadFile(number, file.uri.pathSegments.last.split('.').last, file, file.parent.path);
     print(this.url);
     print(this.thumbnail);
     return true;
@@ -212,17 +227,17 @@ class InventoryItemPhoto extends JsonDecoder {
     param.sendPort.send(image);
   }
 
-  Future<String> uploadFile(name, extension, file, path) async {
+  Future<String> uploadFile(number, extension, file, path) async {
 
     // final Uri uri = new Uri.http("192.168.1.107:8000", "/upload");
     final Uri uri = new Uri.http("ec2-52-90-192-206.compute-1.amazonaws.com", "/upload");
     final request = new http.MultipartRequest("POST", uri);
-    print('UPLOADING $name ${file.path}');
+    print('UPLOADING $number ${file.path}');
 
     request.fields['ftp-host'] = user.ftpHost;
     request.fields['ftp-user'] = user.ftpUsername;
     request.fields['ftp-password'] = user.ftpPassword;
-    request.fields['file-name'] = name;
+    request.fields['file-name'] = number;
     request.fields['file-extension'] = extension;
     request.fields['workspace'] = user.email;
     request.files.add(await http.MultipartFile.fromPath('file', file.path));
@@ -234,7 +249,7 @@ class InventoryItemPhoto extends JsonDecoder {
       });
     });
 
-    return name;
+    return number;
 
   }
 

@@ -114,7 +114,7 @@ class InventoryState extends State<Inventory> {
 
   Widget _listTile(InventoryItem item) {
     return new ListTile(
-      title: new Text(item.name),
+      title: new Text(item.number),
       subtitle: new Text(item.description),
       onTap: () {
         _toInventoryModify(inventory.items.indexOf(item), item);
@@ -170,9 +170,10 @@ class InventoryState extends State<Inventory> {
     _loaded = false;
   }
 
-  void _snackBar(message) {
+  void _snackBar(message, [duration = 3]) {
     _scaffoldKey.currentState.showSnackBar(new SnackBar(
       content: new Text(message),
+      duration: new Duration(seconds: duration),
     ));
   }
 
@@ -245,11 +246,12 @@ class InventoryState extends State<Inventory> {
 
     Navigator.pop(context);
 
-    inventory.post(workspaceId);
+    inventory.post(workspaceId, (response) {
+      setState(() => _snackBar(response, 10));
+    });
     inventory.published = 'true';
     _bottomBarIndex();
     inventory.save(widget.name);
-    setState(() => _snackBar('Inventory successfully published'));
     return true;
   }
 
@@ -298,7 +300,7 @@ class InventoryState extends State<Inventory> {
         item.uploading = 'false';
         inventory.items[itemIndex].uploaded = 'true';
         inventory.save(widget.name);
-        _snackBar('Images for ${item.name} saved');
+        _snackBar('Images for #${item.number} saved');
       });
     }
 

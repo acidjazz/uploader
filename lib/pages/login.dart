@@ -32,6 +32,7 @@ class LoginState extends State<Login> {
       showInSnackBar('Logging In..');
       form.save();
       await user.save();
+      await user.load();
       if (user.ftpValid == 'true') {
         Navigator.of(context).pushReplacementNamed('/inventories');
       } else {
