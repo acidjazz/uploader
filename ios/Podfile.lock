@@ -12,6 +12,8 @@ PODS:
   - Reachability (3.2)
   - shared_preferences (0.0.1):
     - Flutter
+  - url_launcher (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - connectivity (from `Pods/.symlinks/plugins/connectivity-0.3.0/ios`)
@@ -20,6 +22,7 @@ DEPENDENCIES:
   - image_picker (from `Pods/.symlinks/plugins/image_picker-0.3.1/ios`)
   - path_provider (from `Pods/.symlinks/plugins/path_provider-0.4.0/ios`)
   - shared_preferences (from `Pods/.symlinks/plugins/shared_preferences-0.3.3/ios`)
+  - url_launcher (from `Pods/.symlinks/plugins/url_launcher-3.0.0/ios`)
 
 EXTERNAL SOURCES:
   connectivity:
@@ -34,6 +37,8 @@ EXTERNAL SOURCES:
     :path: Pods/.symlinks/plugins/path_provider-0.4.0/ios
   shared_preferences:
     :path: Pods/.symlinks/plugins/shared_preferences-0.3.3/ios
+  url_launcher:
+    :path: Pods/.symlinks/plugins/url_launcher-3.0.0/ios
 
 SPEC CHECKSUMS:
   connectivity: d5992e3758d68b1c4b12d6e012fe0813f1aa1645
@@ -43,6 +48,7 @@ SPEC CHECKSUMS:
   path_provider: 09407919825bfe3c2deae39453b7a5b44f467873
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   shared_preferences: 5a1d487c427ee18fcd3ea1f2a131569481834b53
+  url_launcher: 92b89c1029a0373879933c21642958c874539095
 
 PODFILE CHECKSUM: 0420ab312a523ae0eecfb1fc19ea51dd82cc17c7
 

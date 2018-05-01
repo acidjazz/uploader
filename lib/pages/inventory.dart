@@ -18,6 +18,7 @@ class Inventory extends StatefulWidget {
 
 class InventoryState extends State<Inventory> {
   var _loaded = false;
+  var _scrollDown = false;
   var _loadedSignal = false;
   var _signalSubscription;
   var _connection = Icons.signal_cellular_connected_no_internet_4_bar;
@@ -29,6 +30,7 @@ class InventoryState extends State<Inventory> {
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  ScrollController _invListController = new ScrollController();
 
   Future<void> loadInventory() async {
     await inventory.load(widget.name);
@@ -36,6 +38,10 @@ class InventoryState extends State<Inventory> {
     _bottomBarIndex();
     setState(() {
       _loaded = true;
+      if (_scrollDown == true) {
+        scrollInventory();
+        _scrollDown = false;
+      }
     });
   }
 
@@ -88,6 +94,7 @@ class InventoryState extends State<Inventory> {
 
   Widget _inventoryWidget() {
     return new ListView(
+      controller: _invListController,
       children: inventory.items.map((item) => _listProgressTile(item)).toList(),
     );
   }
@@ -168,7 +175,18 @@ class InventoryState extends State<Inventory> {
           builder: (context) => new InventoryModify(null, null, widget.name),
         ));
     _loaded = false;
+    _scrollDown = true;
   }
+
+  scrollInventory () async {
+    await Future.delayed(new Duration(seconds: 1));
+    _invListController.animateTo(
+      _invListController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeOut,
+    );
+  }
+
 
   void _snackBar(message, [duration = 3]) {
     _scaffoldKey.currentState.showSnackBar(new SnackBar(
