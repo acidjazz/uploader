@@ -53,6 +53,14 @@ class LoginState extends State<Login> {
     return null;
   }
 
+  Image _loginLogo() {
+    if (MediaQuery.of(context).viewInsets.bottom == 0) {
+      return new Image.asset('images/icon-small.png', width: 100.0);
+    } else {
+      return new Image.asset('images/icon-small.png', width: 0.0);
+    }
+  }
+
   void init() async {
     await user.load();
     setState(() { _loadedInitials = true; });
@@ -78,7 +86,7 @@ class LoginState extends State<Login> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    new Image.asset('images/icon-small.png', width: 100.0),
+                    _loginLogo(),
                     new TextFormField(
                       decoration: const InputDecoration(
                         icon: const Icon(Icons.group),
@@ -86,7 +94,7 @@ class LoginState extends State<Login> {
                         labelText: 'Your WorkGroup',
                       ),
                       initialValue: user.email,
-                      keyboardType: TextInputType.text,
+                      keyboardType: TextInputType.url,
                       onSaved: (String value) {
                         user.email = value.toLowerCase();
                       },

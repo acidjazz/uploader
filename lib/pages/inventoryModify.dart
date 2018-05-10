@@ -16,8 +16,8 @@ class InventoryModify extends StatefulWidget {
 
   InventoryModify(this.index, this.item, this.name);
 
-  final String titleNew = 'New Item';
-  final String titleEdit = 'Edit Item';
+  final String titleNew = 'New';
+  final String titleEdit = 'Edit';
 
   @override
   InventoryModifyState createState() => new InventoryModifyState();
@@ -161,7 +161,7 @@ class InventoryModifyState extends State<InventoryModify> {
         backgroundColor: Colors.grey,
         title: new Text(mode == Mode.Edit ? widget.titleEdit : widget.titleNew),
         actions: <Widget>[
-        new FlatButton(
+          new FlatButton(
             onPressed: save,
             child: new Text('SAVE', style: const TextStyle(color: Colors.white)),
           ),

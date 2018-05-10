@@ -80,7 +80,15 @@ class SettingsState extends State<Settings> {
     if (_loaded) {
       return new Scaffold(
         key: _scaffoldKey,
-        appBar: new AppBar(title: new Text('Settings')),
+        appBar: new AppBar(
+          title: new Text('Settings'),
+          actions: <Widget>[
+            new FlatButton(
+            onPressed: _handleSave,
+              child: new Text('SAVE', style: const TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
         drawer: new HomeDrawer('/settings'),
         body: new Form(
           key: _formKey,
@@ -95,7 +103,7 @@ class SettingsState extends State<Settings> {
                   ),
                   validator: _validateField,
                   initialValue: user.ftpHost,
-                  keyboardType: TextInputType.text,
+                  keyboardType: TextInputType.url,
                   onSaved: (String value) {
                     user.ftpHost = value;
                   }
@@ -107,7 +115,7 @@ class SettingsState extends State<Settings> {
                   ),
                   validator: _validateField,
                   initialValue: user.ftpUsername,
-                  keyboardType: TextInputType.text,
+                  keyboardType: TextInputType.url,
                   onSaved: (String value) {
                     user.ftpUsername = value;
                   }
@@ -119,7 +127,7 @@ class SettingsState extends State<Settings> {
                   ),
                   validator: _validateField,
                   initialValue: user.ftpPassword,
-                  keyboardType: TextInputType.text,
+                  keyboardType: TextInputType.url,
                   onSaved: (String value) {
                     user.ftpPassword = value;
                   }
@@ -131,7 +139,7 @@ class SettingsState extends State<Settings> {
                   ),
                   validator: _validateField,
                   initialValue: user.publishURL,
-                  keyboardType: TextInputType.text,
+                  keyboardType: TextInputType.url,
                   onSaved: (String value) {
                     user.publishURL = value;
                   }
@@ -143,25 +151,11 @@ class SettingsState extends State<Settings> {
                   ),
                   // validator: _validateField,
                   initialValue: user.adminURL,
-                  keyboardType: TextInputType.text,
+                  keyboardType: TextInputType.url,
                   onSaved: (String value) {
                     user.adminURL = value;
                   }
                 ),
-                new Container(
-                  padding: const EdgeInsets.all(20.0),
-                  alignment: Alignment.center,
-                  child: _processing ?
-                  new CircularProgressIndicator() :
-                  new RaisedButton(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 40.0),
-                    child: const Text("SAVE"),
-                    onPressed: _handleSave,
-                  ),
-                ),
-
-
               ]
             ),
           ),

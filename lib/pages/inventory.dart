@@ -273,10 +273,38 @@ class InventoryState extends State<Inventory> {
     return true;
   }
 
+  Future<bool> _wifiWarnDialog() async {
+
+    return showDialog(
+      context: context,
+      child: new AlertDialog(
+        title: new Text('Confirmation'),
+        content: new Text('You are not on WiFi, are you sure you want to upload the photos for "${widget.name}?"'),
+        actions: [
+          new FlatButton(
+            child: new Text("CANCEL"),
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          new FlatButton(
+            child: new Text("UPLOAD"),
+            onPressed: () => Navigator.of(context).pop(true),
+          ),
+        ]),
+    );
+
+  }
+
   Future<bool> _uploadItems() async {
     if (_canAction() != null) {
       _snackBar(_canAction());
       return false;
+    }
+
+    if (_connection != Icons.signal_wifi_4_bar) {
+      if (!await _wifiWarnDialog()) {
+        _snackBar('Upload canceled');
+        return false;
+      }
     }
 
     setState(() {
