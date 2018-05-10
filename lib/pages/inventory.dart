@@ -407,36 +407,54 @@ class InventoryState extends State<Inventory> {
 
     if (choice == 2) {
       // we need to prompt them to make sure
-      _removeDialog();
+      _remove();
       return true;
     }
   }
 
-  void _removeDialog() {
-    showDialog(
+  Future<bool> _removeDialog() {
+    String input = '';
+    return showDialog(
       context: context,
       child: new AlertDialog(
-          title: new Text('Confirmation'),
-          content:
-              new Text('Are you sure you want to delete "${widget.name}?"'),
-          actions: [
-            new FlatButton(
-              child: new Text("CANCEL"),
-              onPressed: () => Navigator.pop(context),
-            ),
-            new FlatButton(
-              child: new Text("DELETE"),
-              onPressed: _removeInventory,
-            ),
-          ]),
+        title: new Text("Are you sure you want to delete ${widget.name}?"),
+        content: new TextField(
+          decoration: new InputDecoration(
+            labelText: 'Enter YES to confirm',
+          ),
+          keyboardType: TextInputType.url,
+          autofocus: true,
+          onChanged: (text) { input = text; },
+        ),
+        actions: [
+          new FlatButton(
+            child: new Text("CANCEL"),
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          new FlatButton(
+            child: new Text("DELETE"),
+            onPressed: () {
+              if (input == 'YES') {
+                Navigator.of(context).pop(true);
+              } else {
+                Navigator.of(context).pop(false);
+              }
+            },
+          ),
+        ]),
     );
   }
 
-  Future<Null> _removeInventory() async {
-    Navigator.pop(context);
-    await inventories.remove(widget.name);
-    Navigator.pop(context);
-    _snackBar('Inventory Removed');
+  void _remove () async {
+
+    if (await _removeDialog()) {
+      _snackBar('Deleting ${widget.name}');
+      await inventories.remove(widget.name);
+      setState(() { _loaded = false; });
+    } else {
+      _snackBar('Delete canceled');
+    }
+
   }
 
   Future<bool> _onWillPop() async => inventory.uploading == 'false';

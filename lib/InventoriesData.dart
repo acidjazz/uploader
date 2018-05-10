@@ -44,6 +44,8 @@ class InventoriesData {
 
     for (var i = 0; i < inventories.items.length; i++) {
       inventories.items[i].data = await inventory.load(inventories.items[i].name);
+      inventories.items[i].uploaded = inventory.uploaded;
+      inventories.items[i].published = inventory.published;
     }
 
     return true;
@@ -67,6 +69,8 @@ class InventoriesData {
 class InventoriesItem {
 
   String name;
+  String uploaded;
+  String published;
   List<InventoryItem> data;
   InventoriesItem(this.name);
 
@@ -80,7 +84,17 @@ class InventoriesItem {
       photos += this.data[i].photos.length;
     }
 
-    return '$items items wtih $photos photos';
+    String status = 'ready to upload';
+
+    if (this.uploaded == 'true') {
+      status = 'uploaded';
+    }
+
+    if (this.published == 'true') {
+      status = 'published';
+    }
+
+    return '$items items, $photos photos, $status';
   }
 
   Map<String, dynamic> toJson() => {'name': name };

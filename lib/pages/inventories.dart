@@ -80,24 +80,48 @@ class InventoriesState extends State<Inventories> {
     );
   }
 
+  Future<bool> _removeDialog(String name) {
+    String input = '';
+    return showDialog(
+      context: context,
+        child: new AlertDialog(
+            title: new Text("Are you sure you want to delete $name?"),
+            content: new TextField(
+              decoration: new InputDecoration(
+                labelText: 'Enter YES to confirm',
+              ),
+              keyboardType: TextInputType.url,
+              autofocus: true,
+              onChanged: (text) { input = text; },
+            ),
+            actions: [
+          new FlatButton(
+            child: new Text("CANCEL"),
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          new FlatButton(
+            child: new Text("DELETE"),
+            onPressed: () {
+              if (input == 'YES') {
+                Navigator.of(context).pop(true);
+              } else {
+                Navigator.of(context).pop(false);
+              }
+            },
+          ),
+        ]),
+    );
+  }
+
   void _remove (name) async {
 
-    showDialog(
-      context: context,
-      child: new AlertDialog(
-        content: new Text('Are you sure you want to delete $name?'),
-      actions: <Widget>[
-        new FlatButton( child: new Text("CANCEL"), onPressed: () => Navigator.pop(context)),
-        new FlatButton( child: new Text("DELETE"), onPressed: () async {
-          Navigator.pop(context);
-          await inventories.remove(name);
-          setState(() {
-            _loaded = false;
-          });
-        }),
-        ]
-      ),
-    );
+    if (await _removeDialog(name)) {
+      _snackBar('Deleting $name');
+      await inventories.remove(name);
+      setState(() { _loaded = false; });
+    } else {
+      _snackBar('Delete canceled');
+    }
 
   }
 
@@ -105,7 +129,8 @@ class InventoriesState extends State<Inventories> {
     if (_loaded) {
       if (inventories.items.length < 1) {
         return new Center(
-          child: new Text('You have no inventories yet', style: new TextStyle(fontSize: 20.0))
+          child: new Text('You have no inventories yet',
+            style: new TextStyle(fontSize: 20.0))
         );
       } else {
         return _inventoriesWidget();
@@ -122,20 +147,10 @@ class InventoriesState extends State<Inventories> {
       children: inventories.items.map((item) {
         return new ListTile(
           leading: new Icon(Icons.assignment),
-          trailing: new IconButton(icon: new Icon(Icons.delete), onPressed: () { _remove(item.name); }),
-          /*
-          trailing: new PopupMenuButton(
-            onSelected: (choice) { _remove(item.name); },
-            itemBuilder: (BuildContext context) {
-              return [
-                new PopupMenuItem(
-                  value: 'delete',
-                  child: new Text('Delete'),
-                )
-              ];
-            }
+          trailing: new IconButton(
+            icon: new Icon(Icons.delete),
+            onPressed: () =>  _remove(item.name)
           ),
-          */
           title: new Text(item.name),
           subtitle: new Text(item.stats()),
           onTap: () { _toInventory(item.name); },

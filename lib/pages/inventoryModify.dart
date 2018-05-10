@@ -47,6 +47,7 @@ class InventoryModifyState extends State<InventoryModify> {
       item.photos.add(new InventoryItemPhoto(_file.uri.pathSegments.last, '', ''));
       item.uploaded = 'false';
       inventory.uploaded = 'false';
+      inventory.published = 'false';
     });
     await inventory.save(widget.name);
     scrollPhotos();
