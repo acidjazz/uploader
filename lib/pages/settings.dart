@@ -94,69 +94,72 @@ class SettingsState extends State<Settings> {
           key: _formKey,
           child: new Container(
             padding: new EdgeInsets.symmetric(horizontal: 30.0, vertical: 30.0),
-            child: new ListView(
-              children: <Widget>[
-                new TextFormField(
-                  decoration: const InputDecoration(
-                    icon: const Icon(Icons.computer),
-                    labelText: 'FTP Host',
+            child: SingleChildScrollView(
+              child: new Column(
+                children: <Widget>[
+                  new TextFormField(
+                    decoration: const InputDecoration(
+                      icon: const Icon(Icons.computer),
+                      labelText: 'FTP Host',
+                    ),
+                    validator: _validateField,
+                    initialValue: user.ftpHost,
+                    keyboardType: TextInputType.url,
+                    onSaved: (String value) {
+                      user.ftpHost = value;
+                    },
+
                   ),
-                  validator: _validateField,
-                  initialValue: user.ftpHost,
-                  keyboardType: TextInputType.url,
-                  onSaved: (String value) {
-                    user.ftpHost = value;
-                  }
-                ),
-                new TextFormField(
-                  decoration: const InputDecoration(
-                    icon: const Icon(Icons.account_box),
-                    labelText: 'FTP Username',
+                  new TextFormField(
+                    decoration: const InputDecoration(
+                      icon: const Icon(Icons.account_box),
+                      labelText: 'FTP Username',
+                    ),
+                    validator: _validateField,
+                    initialValue: user.ftpUsername,
+                    keyboardType: TextInputType.url,
+                    onSaved: (String value) {
+                      user.ftpUsername = value;
+                    },
                   ),
-                  validator: _validateField,
-                  initialValue: user.ftpUsername,
-                  keyboardType: TextInputType.url,
-                  onSaved: (String value) {
-                    user.ftpUsername = value;
-                  }
-                ),
-                new TextFormField(
-                  decoration: const InputDecoration(
-                    icon: const Icon(Icons.lock),
-                    labelText: 'FTP Password',
+                  new TextFormField(
+                    decoration: const InputDecoration(
+                      icon: const Icon(Icons.lock),
+                      labelText: 'FTP Password',
+                    ),
+                    validator: _validateField,
+                    initialValue: user.ftpPassword,
+                    keyboardType: TextInputType.url,
+                    onSaved: (String value) {
+                      user.ftpPassword = value;
+                    },
                   ),
-                  validator: _validateField,
-                  initialValue: user.ftpPassword,
-                  keyboardType: TextInputType.url,
-                  onSaved: (String value) {
-                    user.ftpPassword = value;
-                  }
-                ),
-                new TextFormField(
-                  decoration: const InputDecoration(
-                    icon: const Icon(Icons.link),
-                    labelText: 'Publish URL',
+                  new TextFormField(
+                    decoration: const InputDecoration(
+                      icon: const Icon(Icons.link),
+                      labelText: 'Publish URL',
+                    ),
+                    validator: _validateField,
+                    initialValue: user.publishURL,
+                    keyboardType: TextInputType.url,
+                    onSaved: (String value) {
+                      user.publishURL = value;
+                    },
                   ),
-                  validator: _validateField,
-                  initialValue: user.publishURL,
-                  keyboardType: TextInputType.url,
-                  onSaved: (String value) {
-                    user.publishURL = value;
-                  }
-                ),
-                new TextFormField(
-                  decoration: const InputDecoration(
-                    icon: const Icon(Icons.link),
-                    labelText: 'Admin URL',
+                  new TextFormField(
+                    decoration: const InputDecoration(
+                      icon: const Icon(Icons.link),
+                      labelText: 'Admin URL',
+                    ),
+                    // validator: _validateField,
+                    initialValue: user.adminURL,
+                    keyboardType: TextInputType.url,
+                    onSaved: (String value) {
+                      user.adminURL = value;
+                    },
                   ),
-                  // validator: _validateField,
-                  initialValue: user.adminURL,
-                  keyboardType: TextInputType.url,
-                  onSaved: (String value) {
-                    user.adminURL = value;
-                  }
-                ),
-              ]
+                ]
+              ),
             ),
           ),
         ),
