@@ -138,10 +138,15 @@ class InventoryItem {
 
   List<InventoryItemPhoto> photos = [];
   String number;
+
   String description;
   String category;
-  String uploaded = 'false';
+  String startingBid;
+  String reservePrice;
+  String quantity;
+  String buyNowPrice;
 
+  String uploaded = 'false';
   String uploading = 'false';
   double progress = 0.0;
 
@@ -149,8 +154,14 @@ class InventoryItem {
 
   InventoryItem.fromJson(Map<String, dynamic> json)
     : number = json['number'],
+
       description = json['description'],
       category = json['category'],
+      startingBid = json['startingBid'],
+      reservePrice = json['reservePrice'],
+      quantity = json['quantity'],
+      buyNowPrice = json['buyNowPrice'],
+
       uploaded = json['uploaded'],
       progress = json['progress'],
       photos = InventoryItemPhoto.fromList(json['photos'] as List<dynamic>);
@@ -158,8 +169,14 @@ class InventoryItem {
   Map<String, dynamic> toJson () =>
     {
       'number': number,
+
       'description': description,
       'category': category,
+      'startingBid': startingBid,
+      'reservePrice': reservePrice,
+      'quantity': quantity,
+      'buyNowPrice': buyNowPrice,
+
       'uploaded': uploaded,
       'progress': progress,
       'photos': photos,

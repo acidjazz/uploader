@@ -108,7 +108,6 @@ class SettingsState extends State<Settings> {
                     onSaved: (String value) {
                       user.ftpHost = value;
                     },
-
                   ),
                   new TextFormField(
                     decoration: const InputDecoration(

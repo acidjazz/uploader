@@ -241,6 +241,40 @@ class InventoryModifyState extends State<InventoryModify> {
                   onSaved: (String value) { item.category = value; },
                 ),
 
+                new TextFormField(
+                  decoration: const InputDecoration(
+                    icon: const Icon(Icons.gavel),
+                    labelText: 'Starting Bid',
+                  ),
+                  initialValue: item.startingBid == null ? '' : item.startingBid,
+                  keyboardType: TextInputType.numberWithOptions(),
+
+                  onSaved: (String value) { item.startingBid = value; },
+                ),
+
+                new TextFormField(
+                  decoration: const InputDecoration(
+                    icon: const Icon(Icons.attach_money),
+                    labelText: 'Reserve Price',
+                  ),
+                  initialValue: item.reservePrice == null ? '' : item.reservePrice,
+                  onSaved: (String value) { item.category = value; },
+                  keyboardType: TextInputType.numberWithOptions(),
+                ),
+
+                new TextFormField(
+                  decoration: const InputDecoration(
+                    icon: const Icon(Icons.add_shopping_cart),
+                    hintText: 'Item Quantity',
+                    labelText: 'Quantity',
+                  ),
+                  initialValue: item.quantity == null ? '' : item.quantity,
+                  onSaved: (String value) { item.quantity = value; },
+                  keyboardType: TextInputType.numberWithOptions(),
+                ),
+
+
+
               ].reversed.toList(),
             ),
           ),
