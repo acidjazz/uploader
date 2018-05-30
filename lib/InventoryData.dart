@@ -88,7 +88,8 @@ class InventoryData {
         photos.add(photo.url);
         thumbnails.add(photo.thumbnail);
       }
-      row.add('${item.number}|${item.category}|${item.description}||${photos.join(' ')}||1|${thumbnails.join(' ')}|');
+      //item|category|desc|moredesc|photos|taxable?|startingBid|thumbnails|reserve|quantity|seller|buynow
+      row.add('${item.number}|${item.category}|${item.description}||${photos.join(' ')}||${item.startingBid}|${thumbnails.join(' ')}|${item.reservePrice}|${item.quantity}||${item.buyNowPrice}');
     }
     return row.join('\r\n');
 

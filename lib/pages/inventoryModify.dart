@@ -258,7 +258,17 @@ class InventoryModifyState extends State<InventoryModify> {
                     labelText: 'Reserve Price',
                   ),
                   initialValue: item.reservePrice == null ? '' : item.reservePrice,
-                  onSaved: (String value) { item.category = value; },
+                  onSaved: (String value) { item.reservePrice = value; },
+                  keyboardType: TextInputType.numberWithOptions(),
+                ),
+
+                new TextFormField(
+                  decoration: const InputDecoration(
+                    icon: const Icon(Icons.attach_money),
+                    labelText: 'Buy it Now Price',
+                  ),
+                  initialValue: item.buyNowPrice == null ? '' : item.buyNowPrice,
+                  onSaved: (String value) { item.buyNowPrice = value; },
                   keyboardType: TextInputType.numberWithOptions(),
                 ),
 
@@ -268,7 +278,7 @@ class InventoryModifyState extends State<InventoryModify> {
                     hintText: 'Item Quantity',
                     labelText: 'Quantity',
                   ),
-                  initialValue: item.quantity == null ? '' : item.quantity,
+                  initialValue: item.quantity == null ? '1' : item.quantity,
                   onSaved: (String value) { item.quantity = value; },
                   keyboardType: TextInputType.numberWithOptions(),
                 ),
