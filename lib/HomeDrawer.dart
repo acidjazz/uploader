@@ -81,12 +81,12 @@ class HomeDrawerState extends State<HomeDrawer> {
               title: new Text('Sign Out'),
               onTap: () => widget._logOut(context),
             ),
-            new ListTile(
+            /*new ListTile(
               leading: const Icon(Icons.home),
               title: const Text('Home'),
               onTap: () => Navigator.pushNamed(context, '/home'),
               selected: widget.routeName == '/home',
-            ),
+            ),*/
             new ListTile(
               leading: const Icon(Icons.shopping_cart),
               title: const Text('Inventories'),

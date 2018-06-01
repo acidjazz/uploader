@@ -18,8 +18,8 @@ PODS:
 DEPENDENCIES:
   - connectivity (from `Pods/.symlinks/plugins/connectivity-0.3.0/ios`)
   - Flutter (from `Pods/.symlinks/flutter/ios-release`)
-  - flutter_native_image (from `Pods/.symlinks/plugins/flutter_native_image-e8efd2c8fed7850d7b07c587b9c2d251616dac92/ios`)
-  - image_picker (from `Pods/.symlinks/plugins/image_picker-0.3.1/ios`)
+  - flutter_native_image (from `Pods/.symlinks/plugins/flutter_native_image-6d39bbed0d63be96ef68b24e046c7868319ed372/ios`)
+  - image_picker (from `Pods/.symlinks/plugins/image_picker-0.4.2/ios`)
   - path_provider (from `Pods/.symlinks/plugins/path_provider-0.4.0/ios`)
   - shared_preferences (from `Pods/.symlinks/plugins/shared_preferences-0.3.3/ios`)
   - url_launcher (from `Pods/.symlinks/plugins/url_launcher-3.0.1/ios`)
@@ -30,9 +30,9 @@ EXTERNAL SOURCES:
   Flutter:
     :path: Pods/.symlinks/flutter/ios-release
   flutter_native_image:
-    :path: Pods/.symlinks/plugins/flutter_native_image-e8efd2c8fed7850d7b07c587b9c2d251616dac92/ios
+    :path: Pods/.symlinks/plugins/flutter_native_image-6d39bbed0d63be96ef68b24e046c7868319ed372/ios
   image_picker:
-    :path: Pods/.symlinks/plugins/image_picker-0.3.1/ios
+    :path: Pods/.symlinks/plugins/image_picker-0.4.2/ios
   path_provider:
     :path: Pods/.symlinks/plugins/path_provider-0.4.0/ios
   shared_preferences:

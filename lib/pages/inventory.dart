@@ -121,8 +121,8 @@ class InventoryState extends State<Inventory> {
 
   Widget _listTile(InventoryItem item) {
     return new ListTile(
-      title: new Text(item.number),
-      subtitle: new Text(item.description),
+      title: new Text('${item.number} - ${item.description}'),
+      subtitle: new Text(item.category),
       onTap: () {
         _toInventoryModify(inventory.items.indexOf(item), item);
       },

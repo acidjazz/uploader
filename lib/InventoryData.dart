@@ -53,7 +53,30 @@ class InventoryData {
     return items;
   }
   String next () {
-    return (inventory.items.length + 1).toString();
+    // make this 1 if they want the default to pull in skipped numbers
+    int index = inventory.items.length;
+    while (true) {
+      index++;
+      if (!this.exists(index.toString())) {
+        return index.toString();
+      }
+    }
+  }
+  bool exists (number) {
+    for(InventoryItem item in inventory.items) {
+      if (item.number == number)
+        return true;
+    }
+    return false;
+  }
+
+  int count (number) {
+    int items = 0;
+    for (InventoryItem item in inventory.items) {
+      if (item.number == number)
+        items++;
+    }
+    return items;
   }
 
   Future<bool> remove (name) async {

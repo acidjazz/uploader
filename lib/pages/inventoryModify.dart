@@ -41,7 +41,7 @@ class InventoryModifyState extends State<InventoryModify> {
   }
 
   addPhoto () async {
-    var _file = await ImagePicker.pickImage();
+    var _file = await ImagePicker.pickImage(source: ImageSource.gallery);
     await _file.copy(inventory.path(_file.uri.pathSegments.last));
     setState(() {
       item.photos.add(new InventoryItemPhoto(_file.uri.pathSegments.last, '', ''));
@@ -68,9 +68,22 @@ class InventoryModifyState extends State<InventoryModify> {
     showInSnackBar('Photo removed');
   }
 
-  String _validateName(String value) {
+  String _validateNumber(String value) {
     if (value.isEmpty)
       return 'Inventory number is required';
+    if (inventory.exists(value))
+      if (mode == Mode.Create)
+        return 'Inventory number is already used';
+      if (mode == Mode.Edit && inventory.count(value) > 1)
+        return 'Inventory number is already used';
+
+
+    return null;
+  }
+
+  String _validateQuantity(String value) {
+    if (value.isEmpty)
+      return 'Inventory Quantity is required';
     return null;
   }
 
@@ -215,8 +228,7 @@ class InventoryModifyState extends State<InventoryModify> {
                   ),
                   initialValue: item.number == null ? inventory.next() : item.number,
                   onSaved: (String value) { item.number = value; },
-                  validator: _validateName,
-                  enabled: false,
+                  validator: _validateNumber,
                   keyboardType: TextInputType.numberWithOptions(),
                 ),
 
@@ -279,6 +291,7 @@ class InventoryModifyState extends State<InventoryModify> {
                     labelText: 'Quantity',
                   ),
                   initialValue: item.quantity == null ? '1' : item.quantity,
+                  validator: _validateQuantity,
                   onSaved: (String value) { item.quantity = value; },
                   keyboardType: TextInputType.numberWithOptions(),
                 ),
