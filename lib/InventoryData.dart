@@ -53,14 +53,14 @@ class InventoryData {
     return items;
   }
   String next () {
-    // make this 1 if they want the default to pull in skipped numbers
-    int index = inventory.items.length;
-    while (true) {
-      index++;
-      if (!this.exists(index.toString())) {
-        return index.toString();
+    int index = 0
+    for (InventoryItem item in inventory.items) {
+      if (int.parse(item.number) > index) {
+        index = int.parse(item.number);
       }
     }
+    index++;
+    return index.toString();
   }
   bool exists (number) {
     for(InventoryItem item in inventory.items) {
