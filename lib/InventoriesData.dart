@@ -26,6 +26,15 @@ class InventoriesData {
     return items;
   }
 
+  bool exists (name) {
+    for (InventoriesItem item in inventories.items) {
+      if (item.name == name) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   Future<bool> save() async {
     final SharedPreferences prefs = await _prefs;
     prefs.setString(Key, json.encode(inventories));

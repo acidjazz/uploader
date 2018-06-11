@@ -53,7 +53,7 @@ class InventoryData {
     return items;
   }
   String next () {
-    int index = 0
+    int index = 0;
     for (InventoryItem item in inventory.items) {
       if (int.parse(item.number) > index) {
         index = int.parse(item.number);
@@ -228,7 +228,7 @@ class InventoryItemPhoto extends JsonDecoder {
     photos.map((photo) =>
       new InventoryItemPhoto.fromJson(photo as Map<String, dynamic>)).toList();
 
-  upload(number) async {
+  upload(name, number) async {
 
     // grabbing the file as a whole
     // final File file = new File(inventory.path(this.path));
@@ -257,7 +257,7 @@ class InventoryItemPhoto extends JsonDecoder {
       percentage: 50);
     // final File file = new File(inventory.path(this.path));
 
-    await uploadFile(number, file.uri.pathSegments.last.split('.').last, file, file.parent.path);
+    await uploadFile(name, number, file.uri.pathSegments.last.split('.').last, file, file.parent.path);
     print(this.url);
     print(this.thumbnail);
     return true;
@@ -268,7 +268,7 @@ class InventoryItemPhoto extends JsonDecoder {
     param.sendPort.send(image);
   }
 
-  Future<String> uploadFile(number, extension, file, path) async {
+  Future<String> uploadFile(name, number, extension, file, path) async {
 
     // final Uri uri = new Uri.http("192.168.1.107:8000", "/upload");
     final Uri uri = new Uri.http("ec2-52-90-192-206.compute-1.amazonaws.com", "/upload");
@@ -281,9 +281,12 @@ class InventoryItemPhoto extends JsonDecoder {
     request.fields['file-name'] = number;
     request.fields['file-extension'] = extension;
     request.fields['workspace'] = user.email;
+    request.fields['inventory-name'] = name;
     request.files.add(await http.MultipartFile.fromPath('file', file.path));
 
     await request.send().then((response) {
+
+      https://www.change.org/p/lg-please-revive-3d-on-a-2018-oled-tv-model
       response.stream.transform(UTF8.decoder).listen((data) {
         this.url = json.decode(data)['imageName'];
         this.thumbnail = json.decode(data)['thumbnailName'];

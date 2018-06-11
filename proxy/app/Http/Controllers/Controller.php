@@ -43,7 +43,7 @@ class Controller extends BaseController
 
     if (isset($request->file)) {
 
-      $dir = '/html/'.$request->get('workspace').'-'.date('ymd').'/';
+      $dir = '/html/'.$request->get('workspace').'/'.$request->get('inventory-name').'/';
       $imageName = $request->get('file-name') . '.' . $request->get('file-extension');
       $thumbnailName = $request->get('file-name') . 't.' . $request->get('file-extension');
       $tmpDir = tempnam(sys_get_temp_dir(), 'maxanet_');
@@ -83,7 +83,12 @@ class Controller extends BaseController
 
       $dirs = ftp_nlist($connection, '/html');
 
-      if (!in_array($dir, $dirs)) {
+      if (!in_array('/html/'.$request->get('workspace'), $dirs)) {
+        ftp_mkdir($connection, '/html/'.$request->get('workspace'));
+      }
+
+      $name_dirs = ftp_nlist($connection, '/html/'.$request->get('workspace'));
+      if (!in_array($dir, $name_dirs)) {
         ftp_mkdir($connection, $dir);
       }
 
@@ -101,7 +106,10 @@ class Controller extends BaseController
         FTP_BINARY
       );
 
-      return ['imageName' => $imageName, 'thumbnailName' => $thumbnailName];
+      return [
+        'imageName' => $request->get('inventory-name').'/'.$imageName, 
+        'thumbnailName' => $request->get('inventory-name').'/'.$thumbnailName,
+      ];
 
     }
 

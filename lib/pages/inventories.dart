@@ -40,6 +40,11 @@ class InventoriesState extends State<Inventories> {
     if (value.isEmpty) {
       return 'Please specify a name';
     }
+
+    if (!new RegExp("/[a-zA-Z0-9]+").hasMatch(value)) {
+      return 'Name can only be A-z and 0-9';
+    }
+
     if (inventories.items.map((item) => item.name).toList().indexOf(textName) != -1) {
       return 'Inventory name already exists';
     }
