@@ -43,8 +43,9 @@ class InventoryModifyState extends State<InventoryModify> {
     ));
   }
 
-  addPhoto () async {
-    _image = await ImagePicker.pickImage(source: ImageSource.gallery);
+  addPhoto (ImageSource source) async {
+
+    _image = await ImagePicker.pickImage(source: source);
     if (_image == null) {
       showInSnackBar('Selection Canceled');
       return true;
@@ -63,7 +64,7 @@ class InventoryModifyState extends State<InventoryModify> {
   scrollPhotos () {
     _gridController.animateTo(
       _gridController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 600),
       curve: Curves.easeOut,
     );
   }
@@ -130,15 +131,40 @@ class InventoryModifyState extends State<InventoryModify> {
 
   Widget addPhotosWidget () {
     return new GridTile(
-      child: new GestureDetector(
-        onTap: () => addPhoto(),
-        child: new Container(
-          child: new Icon(Icons.add_a_photo, size: 30.0, color: Colors.blue),
-            decoration: new BoxDecoration(
-              border: new Border.all(width: 1.0, color: Colors.blue),
-          ),
-        ),
+      child: new Container(
+        decoration: new BoxDecoration(border: new Border.all(width: 1.0, color: Colors.blue)),
+        child: new Column(
+          children: [
+            new GestureDetector(
+              onTap: () => addPhoto(ImageSource.gallery),
+              child: photoTypeWidget(Icons.add_photo_alternate, 'Gallery Photo'),
+            ),
+            new GestureDetector(
+              onTap: () => addPhoto(ImageSource.camera),
+              child: photoTypeWidget(Icons.add_a_photo, 'Camera Photo'),
+            ),
+          ],
+        )
       ),
+    );
+  }
+
+  Widget photoTypeWidget(icon, label) {
+    return new Padding(
+      padding: new EdgeInsets.symmetric(vertical: 25.0, horizontal: 20.0),
+      child: new Container(
+        decoration: new BoxDecoration(
+          color: Colors.blue,
+          borderRadius: new BorderRadius.circular(10.0),
+        ),
+        padding: new EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+        child: new Row(
+          children: [
+            new Icon(icon, size: 30.0, color: Colors.white),
+            new Text(' $label', style: new TextStyle(color: Colors.white)),
+          ]
+        )
+      )
     );
   }
 
@@ -245,7 +271,7 @@ class InventoryModifyState extends State<InventoryModify> {
                     hintText: 'Describe your item',
                     labelText: 'Item Description',
                   ),
-                  maxLines: null,
+                  maxLines: 1,
                   initialValue: item.description == null ? '' : item.description,
                   onSaved: (String value) { item.description = value; },
                 ),
