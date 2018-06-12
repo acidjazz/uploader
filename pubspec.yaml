@@ -14,7 +14,7 @@ dev_dependencies:
     sdk: flutter
   flutter_launcher_icons: ^0.3.2
   shared_preferences: ^0.3.3
-  image_picker: ^0.4.2
+  image_picker: ^0.4.4
   connectivity: ^0.3.0
   image: ^1.1.30
   path_provider: ^0.4.0

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -26,6 +27,8 @@ class InventoryModify extends StatefulWidget {
 
 class InventoryModifyState extends State<InventoryModify> {
 
+  File _image;
+
   Mode get mode => widget.index == null ? Mode.Create : Mode.Edit;
   InventoryItem _item;
   InventoryItem get item => _item ??= (widget.index == null ? new InventoryItem() : widget.item);
@@ -41,10 +44,14 @@ class InventoryModifyState extends State<InventoryModify> {
   }
 
   addPhoto () async {
-    var _file = await ImagePicker.pickImage(source: ImageSource.gallery);
-    await _file.copy(inventory.path(_file.uri.pathSegments.last));
+    _image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (_image == null) {
+      showInSnackBar('Selection Canceled');
+      return true;
+    }
+    await _image.copy(inventory.path(_image.uri.pathSegments.last));
     setState(() {
-      item.photos.add(new InventoryItemPhoto(_file.uri.pathSegments.last, '', ''));
+      item.photos.add(new InventoryItemPhoto(_image.uri.pathSegments.last, '', ''));
       item.uploaded = 'false';
       inventory.uploaded = 'false';
       inventory.published = 'false';

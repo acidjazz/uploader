@@ -8,16 +8,17 @@ import 'package:http/http.dart' as http;
 
 class UserData {
 
+  /* ROLLOUT: REMOVE DEFAULTS FIRST */
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  String email = '';
-  String password = '';
-  String ftpHost = '';
-  String ftpUsername = '';
-  String ftpPassword = '';
+  String email = 'exampled';
+  String password = 'nexd123pw4';
+  String ftpHost = 'apptest.maxanet.com';
+  String ftpUsername = 'apptest';
+  String ftpPassword = 'aptst0413';
   String ftpValid = 'false';
 
-  String publishURL = '';
-  String adminURL = '';
+  String publishURL = 'https://www.maxanet.com/cgi-bin/mrnewinv.cgi';
+  String adminURL = 'https://www.usatoday.com/';
 
   static final UserData _singleton = new UserData._internal();
   UserData._internal();
@@ -25,15 +26,15 @@ class UserData {
 
   Future<bool> load () async {
     final SharedPreferences prefs = await _prefs;
-    this.email = prefs.getString('email');
-    this.password = prefs.getString('password');
-    this.ftpHost = prefs.getString('ftpHost');
-    this.ftpUsername = prefs.getString('ftpUsername');
-    this.ftpPassword = prefs.getString('ftpPassword');
-    this.ftpValid = prefs.getString('ftpValid');
+    this.email ??= prefs.getString('email');
+    this.password ??= prefs.getString('password');
+    this.ftpHost ??= prefs.getString('ftpHost');
+    this.ftpUsername ??= prefs.getString('ftpUsername');
+    this.ftpPassword ??= prefs.getString('ftpPassword');
+    this.ftpValid ??= prefs.getString('ftpValid');
 
-    this.publishURL = prefs.getString('publishURL');
-    this.adminURL = prefs.getString('adminURL');
+    this.publishURL ??= prefs.getString('publishURL');
+    this.adminURL ??= prefs.getString('adminURL');
 
     return true;
   }

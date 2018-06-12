@@ -41,7 +41,11 @@ class InventoriesState extends State<Inventories> {
       return 'Please specify a name';
     }
 
-    if (!new RegExp("/[a-zA-Z0-9]+").hasMatch(value)) {
+    RegExp test = new RegExp(r"^[a-zA-Z0-9]+$");
+    print(value);
+    print(test.hasMatch(value));
+
+    if (!test.hasMatch(value)) {
       return 'Name can only be A-z and 0-9';
     }
 

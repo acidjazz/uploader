@@ -286,7 +286,6 @@ class InventoryItemPhoto extends JsonDecoder {
 
     await request.send().then((response) {
 
-      https://www.change.org/p/lg-please-revive-3d-on-a-2018-oled-tv-model
       response.stream.transform(UTF8.decoder).listen((data) {
         this.url = json.decode(data)['imageName'];
         this.thumbnail = json.decode(data)['thumbnailName'];
