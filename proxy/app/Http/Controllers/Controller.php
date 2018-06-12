@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 
-// use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Log;
 
 class Controller extends BaseController
 {
@@ -43,7 +43,7 @@ class Controller extends BaseController
 
     if (isset($request->file)) {
 
-      $dir = '/html/'.$request->get('workspace').'/'.$request->get('inventory-name').'/';
+      $dir = '/html/'.$request->get('workspace').'/'.$request->get('inventory-name');
       $imageName = $request->get('file-name') . '.' . $request->get('file-extension');
       $thumbnailName = $request->get('file-name') . 't.' . $request->get('file-extension');
       $tmpDir = tempnam(sys_get_temp_dir(), 'maxanet_');
@@ -88,20 +88,21 @@ class Controller extends BaseController
       }
 
       $name_dirs = ftp_nlist($connection, '/html/'.$request->get('workspace'));
+      Log::debug('Making a Directory: ' . $dir);
       if (!in_array($dir, $name_dirs)) {
         ftp_mkdir($connection, $dir);
       }
 
       ftp_put(
         $connection,
-        $dir.$imageName,
+        $dir.'/'.$imageName,
         $tmpDir.$imageName,
         FTP_BINARY
       );
 
       ftp_put(
         $connection,
-        $dir.$thumbnailName,
+        $dir.'/'.$thumbnailName,
         $tmpDir.$thumbnailName,
         FTP_BINARY
       );

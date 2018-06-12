@@ -37,22 +37,21 @@ class InventoriesState extends State<Inventories> {
   }
 
   String _validateName (String value) {
+
     if (value.isEmpty) {
       return 'Please specify a name';
     }
 
-    RegExp test = new RegExp(r"^[a-zA-Z0-9]+$");
-    print(value);
-    print(test.hasMatch(value));
-
-    if (!test.hasMatch(value)) {
+    if (!new RegExp(r"^[a-zA-Z0-9]+$").hasMatch(value)) {
       return 'Name can only be A-z and 0-9';
     }
 
     if (inventories.items.map((item) => item.name).toList().indexOf(textName) != -1) {
       return 'Inventory name already exists';
     }
+
     return null;
+
   }
 
   _addDialog () {
