@@ -63,7 +63,7 @@ class InventoryModifyState extends State<InventoryModify> {
 
   scrollPhotos () {
     _gridController.animateTo(
-      _gridController.position.maxScrollExtent,
+      _gridController.position.maxScrollExtent + 100,
       duration: const Duration(milliseconds: 600),
       curve: Curves.easeOut,
     );
