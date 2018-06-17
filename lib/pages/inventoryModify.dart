@@ -134,6 +134,7 @@ class InventoryModifyState extends State<InventoryModify> {
       child: new Container(
         decoration: new BoxDecoration(border: new Border.all(width: 1.0, color: Colors.blue)),
         child: new Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             new GestureDetector(
               onTap: () => addPhoto(ImageSource.gallery),
@@ -151,7 +152,7 @@ class InventoryModifyState extends State<InventoryModify> {
 
   Widget photoTypeWidget(icon, label) {
     return new Padding(
-      padding: new EdgeInsets.symmetric(vertical: 25.0, horizontal: 20.0),
+      padding: new EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
       child: new Container(
         decoration: new BoxDecoration(
           color: Colors.blue,
