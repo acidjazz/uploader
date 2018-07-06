@@ -52,6 +52,7 @@ class InventoryData {
     appDoc = await getApplicationDocumentsDirectory();
     return items;
   }
+
   String next () {
     int index = 0;
     for (InventoryItem item in inventory.items) {

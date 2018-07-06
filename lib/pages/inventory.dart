@@ -204,9 +204,10 @@ class InventoryState extends State<Inventory> {
       return 'You have no inventory yet';
     }
 
+    /* REMOVING INTERNET CHECK
     if (_internet == false) {
       return 'Internet is required to upload inventory';
-    }
+    }*/
 
     return null;
   }

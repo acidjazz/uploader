@@ -116,10 +116,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "3c6c0a64d154d3a9d960cb1cfab2e2d98a1ba53d"
+      resolved-ref: "77b06ad03dc0bda3708e3987327d2b1479c29291"
       url: "https://github.com/btastic/flutter_native_image"
     source: git
-    version: "0.0.2"
+    version: "0.0.3"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -467,5 +467,5 @@ packages:
     source: hosted
     version: "2.1.13"
 sdks:
-  dart: ">=2.0.0-dev.52.0 <=2.0.0-dev.54.0.flutter-46ab040e58"
-  flutter: ">=0.1.4 <=0.4.4"
+  dart: ">=2.0.0-dev.52.0 <=2.0.0-dev.58.0.flutter-f981f09760"
+  flutter: ">=0.1.4 <=0.5.5"

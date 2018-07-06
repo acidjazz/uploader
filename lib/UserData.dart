@@ -8,8 +8,9 @@ import 'package:http/http.dart' as http;
 
 class UserData {
 
-  /* ROLLOUT: REMOVE DEFAULTS FIRST */
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  /* ROLLOUT: REMOVE DEFAULTS FIRST
   String email = 'exampled';
   String password = 'nexd123pw4';
   String ftpHost = 'apptest.maxanet.com';
@@ -19,6 +20,18 @@ class UserData {
 
   String publishURL = 'https://www.maxanet.com/cgi-bin/mrnewinv.cgi';
   String adminURL = 'https://www.usatoday.com/';
+  */
+
+  String email = '';
+  String password = '';
+  String ftpHost = '';
+  String ftpUsername = '';
+  String ftpPassword = '';
+  String ftpValid = 'false';
+
+  String publishURL = '';
+  String adminURL = '';
+
 
   static final UserData _singleton = new UserData._internal();
   UserData._internal();
