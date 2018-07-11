@@ -411,6 +411,7 @@ class InventoryState extends State<Inventory> {
       _remove();
       return true;
     }
+    return false;
   }
 
   Future<bool> _removeDialog() {

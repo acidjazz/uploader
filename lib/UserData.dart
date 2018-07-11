@@ -17,7 +17,6 @@ class UserData {
   String ftpUsername = 'apptest';
   String ftpPassword = 'aptst0413';
   String ftpValid = 'false';
-
   String publishURL = 'https://www.maxanet.com/cgi-bin/mrnewinv.cgi';
   String adminURL = 'https://www.usatoday.com/';
   */
