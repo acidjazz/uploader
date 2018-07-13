@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:maxanet_uploader/HomeDrawer.dart';
 import 'package:maxanet_uploader/UserData.dart';
+import '../UserData.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -63,7 +64,7 @@ class SettingsState extends State<Settings> {
     await user.load();
     setState(() => _loaded = true);
     print('init()');
-    print(user.ftpHost);
+    print(user.workgroup);
   }
 
   void _snackBar(String value, [int seconds=3]) {
@@ -97,6 +98,30 @@ class SettingsState extends State<Settings> {
             child: SingleChildScrollView(
               child: new Column(
                 children: <Widget>[
+                  new TextFormField(
+                    decoration: const InputDecoration(
+                      icon: const Icon(Icons.group),
+                      labelText: 'Workspace',
+                    ),
+                    validator: _validateField,
+                    initialValue: user.workgroup,
+                    keyboardType: TextInputType.url,
+                    onSaved: (String value) {
+                      user.workgroup = value.toLowerCase();
+                    },
+                  ),
+                  new TextFormField(
+                    decoration: const InputDecoration(
+                      icon: const Icon(Icons.lock),
+                      labelText: 'Password',
+                    ),
+                    validator: _validateField,
+                    initialValue: user.password,
+                    keyboardType: TextInputType.url,
+                    onSaved: (String value) {
+                      user.password = value;
+                    },
+                  ),
                   new TextFormField(
                     decoration: const InputDecoration(
                       icon: const Icon(Icons.computer),

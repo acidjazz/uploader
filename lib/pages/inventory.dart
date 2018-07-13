@@ -232,7 +232,7 @@ class InventoryState extends State<Inventory> {
                 key: _formKey,
                 child: new TextFormField(
                   decoration: new InputDecoration(
-                    labelText: '${user.email}#',
+                    labelText: '${user.workgroup}#',
                   ),
                   keyboardType: TextInputType.number,
                   onSaved: (String value) {

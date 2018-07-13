@@ -125,7 +125,7 @@ class InventoryData {
 
     print('publish detail:');
     print('url: ${user.publishURL}');
-    print('auction: ${user.email}$workspace');
+    print('auction: ${user.workgroup}$workspace');
     print('remotepw: ${user.password}');
     print('file:');;
     print(this.toCSV());
@@ -135,7 +135,7 @@ class InventoryData {
     final request = new http.MultipartRequest("POST", uri);
 
     // request.fields['auction'] = 'exampled';
-    request.fields['auction'] = '${user.email}$workspace';
+    request.fields['auction'] = '${user.workgroup}$workspace';
     request.fields['remotepw'] = user.password;
     request.fields['delimiter'] = '|';
     request.fields['submit'] = '1';
@@ -281,7 +281,7 @@ class InventoryItemPhoto extends JsonDecoder {
     request.fields['ftp-password'] = user.ftpPassword;
     request.fields['file-name'] = number;
     request.fields['file-extension'] = extension;
-    request.fields['workspace'] = user.email;
+    request.fields['workspace'] = user.workgroup;
     request.fields['inventory-name'] = name;
     request.files.add(await http.MultipartFile.fromPath('file', file.path));
 

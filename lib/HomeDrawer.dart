@@ -66,7 +66,7 @@ class HomeDrawerState extends State<HomeDrawer> {
           children: <Widget>[
             new UserAccountsDrawerHeader(
               accountName: new Text('WorkGroup'),
-              accountEmail: new Text(user.email),
+              accountEmail: new Text(user.workgroup),
               currentAccountPicture: null,
               decoration: new BoxDecoration(
                 image: new DecorationImage(

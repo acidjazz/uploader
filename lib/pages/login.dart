@@ -93,10 +93,10 @@ class LoginState extends State<Login> {
                         hintText: 'Your WorkGroup',
                         labelText: 'Your WorkGroup',
                       ),
-                      initialValue: user.email,
+                      initialValue: user.workgroup,
                       keyboardType: TextInputType.url,
                       onSaved: (String value) {
-                        user.email = value.toLowerCase();
+                        user.workgroup = value.toLowerCase();
                       },
                       validator: _validateEmail,
                     ),

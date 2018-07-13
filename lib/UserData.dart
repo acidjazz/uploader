@@ -11,7 +11,7 @@ class UserData {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   /* ROLLOUT: REMOVE DEFAULTS FIRST
-  String email = 'exampled';
+  String workgroup = 'exampled';
   String password = 'nexd123pw4';
   String ftpHost = 'apptest.maxanet.com';
   String ftpUsername = 'apptest';
@@ -21,13 +21,12 @@ class UserData {
   String adminURL = 'https://www.usatoday.com/';
   */
 
-  String email = '';
+  String workgroup = '';
   String password = '';
   String ftpHost = '';
   String ftpUsername = '';
   String ftpPassword = '';
   String ftpValid = 'false';
-
   String publishURL = '';
   String adminURL = '';
 
@@ -38,22 +37,22 @@ class UserData {
 
   Future<bool> load () async {
     final SharedPreferences prefs = await _prefs;
-    this.email ??= prefs.getString('email');
-    this.password ??= prefs.getString('password');
-    this.ftpHost ??= prefs.getString('ftpHost');
-    this.ftpUsername ??= prefs.getString('ftpUsername');
-    this.ftpPassword ??= prefs.getString('ftpPassword');
-    this.ftpValid ??= prefs.getString('ftpValid');
+    this.workgroup = prefs.getString('workgroup');
+    this.password = prefs.getString('password');
+    this.ftpHost = prefs.getString('ftpHost');
+    this.ftpUsername = prefs.getString('ftpUsername');
+    this.ftpPassword = prefs.getString('ftpPassword');
+    this.ftpValid = prefs.getString('ftpValid');
 
-    this.publishURL ??= prefs.getString('publishURL');
-    this.adminURL ??= prefs.getString('adminURL');
+    this.publishURL = prefs.getString('publishURL');
+    this.adminURL = prefs.getString('adminURL');
 
     return true;
   }
 
   Future<bool> save () async {
     final SharedPreferences prefs = await _prefs;
-    prefs.setString('email', this.email);
+    prefs.setString('workgroup', this.workgroup);
     prefs.setString('password', this.password);
     prefs.setString('ftpHost', this.ftpHost);
     prefs.setString('ftpUsername', this.ftpUsername);
@@ -67,9 +66,9 @@ class UserData {
 
   Future<bool> reset () async {
     final SharedPreferences prefs = await _prefs;
-    prefs.remove('email');
+    prefs.remove('workgroup');
     prefs.remove('password');
-    this.email = '';
+    this.workgroup = '';
     this.password = '';
     return true;
   }
@@ -82,7 +81,7 @@ class UserData {
     request.fields['ftp-user'] = user.ftpUsername;
     request.fields['ftp-password'] = user.ftpPassword;
 
-    print('we are sending..');
+    // print('we are sending..');
 
     request.send().then((response) {
       response.stream.transform(UTF8.decoder).listen((data) {
