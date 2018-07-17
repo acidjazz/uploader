@@ -54,18 +54,18 @@ class InventoryData {
   }
 
   String next () {
-    int index = 0;
-    for (InventoryItem item in inventory.items) {
-      if (int.parse(item.number) > index) {
-        index = int.parse(item.number);
-      }
+    int index = 1;
+    while (this.exists(index)) {
+      index++;
+      print('$index exists, darn');
     }
-    index++;
+    print('$index does not exist yet!');
     return index.toString();
   }
+
   bool exists (number) {
     for(InventoryItem item in inventory.items) {
-      if (item.number == number)
+      if (int.parse(item.number) == number)
         return true;
     }
     return false;

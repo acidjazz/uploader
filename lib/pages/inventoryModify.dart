@@ -97,6 +97,7 @@ class InventoryModifyState extends State<InventoryModify> {
 
   String _validatePhotos() {
     return null;
+    // photos not required anymore
     if (item.photos.length < 1)
       return 'Please select at least one photo';
     return null;
@@ -229,30 +230,28 @@ class InventoryModifyState extends State<InventoryModify> {
         ],
 
       ),
-      body: new SafeArea(
-        child: new Form(
-          key: _formKey,
-          child: new Container(
-            padding: new EdgeInsets.symmetric(horizontal: 30.0, vertical: 30.0),
-            child: new ListView(
-              reverse: true,
-              shrinkWrap: true,
-              children: <Widget>[
+      body: new Form(
+        key: _formKey,
+        child: new ListView(
+          padding: new EdgeInsets.symmetric(horizontal: 20.0),
+          children: <Widget>[
+            new Container(
+              padding: new EdgeInsets.symmetric(vertical: 20.0),
+              height: MediaQuery.of(context).size.height*0.3,
+              child: new GridView.count(
+                controller: _gridController,
+                crossAxisCount: 1,
+                scrollDirection: Axis.horizontal,
+                mainAxisSpacing: 4.0,
+                crossAxisSpacing: 4.0,
+                padding: const EdgeInsets.all(4.0),
+                childAspectRatio: (orientation == Orientation.portrait) ? 1.0 : 1.3,
+                children: photosWidget()
+              ),
+            ),
 
-                new Container(
-                  padding: new EdgeInsets.symmetric(vertical: 20.0),
-                  height: MediaQuery.of(context).size.height*0.3,
-                  child: new GridView.count(
-                    controller: _gridController,
-                    crossAxisCount: 1,
-                    scrollDirection: Axis.horizontal,
-                    mainAxisSpacing: 4.0,
-                    crossAxisSpacing: 4.0,
-                    padding: const EdgeInsets.all(4.0),
-                    childAspectRatio: (orientation == Orientation.portrait) ? 1.0 : 1.3,
-                    children: photosWidget()
-                  ),
-                ),
+            new Column(
+              children: <Widget>[
 
                 new TextFormField(
                   decoration: const InputDecoration(
@@ -330,12 +329,8 @@ class InventoryModifyState extends State<InventoryModify> {
                   keyboardType: TextInputType.numberWithOptions(),
                 ),
 
-
-
-              ].reversed.toList(),
-            ),
-          ),
-        ),
+             ]),
+         ]),
       ),
     );
   }
