@@ -57,9 +57,7 @@ class InventoryData {
     int index = 1;
     while (this.exists(index)) {
       index++;
-      print('$index exists, darn');
     }
-    print('$index does not exist yet!');
     return index.toString();
   }
 
