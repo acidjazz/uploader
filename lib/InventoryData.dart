@@ -49,12 +49,14 @@ class InventoryData {
     inventory.items = items;
     inventory.uploaded = prefs.getString('$name-uploaded');
     inventory.published = prefs.getString('$name-published');
+
     appDoc = await getApplicationDocumentsDirectory();
+
     return items;
   }
 
   String next () {
-    int index = 1;
+    int index = int.parse(inventory.items.last.number);
     while (this.exists(index)) {
       index++;
     }

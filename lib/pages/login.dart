@@ -74,7 +74,7 @@ class LoginState extends State<Login> {
     if (_loadedInitials) {
       return new Scaffold(
           key: _scaffoldKey,
-          appBar: new AppBar(title: new Text('Login to Maxanet')),
+          appBar: new AppBar(title: new Text('Welcome to Maxanet')),
           body: new SafeArea(
             top: false,
             bottom: false,
@@ -87,6 +87,7 @@ class LoginState extends State<Login> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     _loginLogo(),
+                    /*
                     new TextFormField(
                       decoration: const InputDecoration(
                         icon: const Icon(Icons.group),
@@ -113,11 +114,12 @@ class LoginState extends State<Login> {
                       },
                       validator: _validatePassword,
                     ),
+                    */
                     new Container(
                       padding: const EdgeInsets.all(20.0),
                       alignment: Alignment.center,
                       child: new RaisedButton(
-                        child: const Text('LOGIN'),
+                        child: const Text('ENTER'),
                         onPressed: _handleSubmitted,
                       ),
                     ),
