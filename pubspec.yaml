@@ -22,6 +22,7 @@ dev_dependencies:
   flutter_native_image:
     git: https://github.com/acidjazz/flutter_native_image
   url_launcher: ^3.0.2
+  package_info: ^0.3.2
 
 
 flutter_icons:

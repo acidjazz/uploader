@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 import '../UserData.dart';
 
 
@@ -12,6 +13,7 @@ class Login extends StatefulWidget {
 class LoginState extends State<Login> {
 
   var _loadedInitials = false;
+  var _version = '';
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -24,33 +26,13 @@ class LoginState extends State<Login> {
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
-  Future _handleSubmitted() async {
-    final FormState form = _formKey.currentState;
-    if (!form.validate()) {
-      showInSnackBar('Please complete the login form');
+  Future _enter() async {
+    await user.load();
+    if (user.ftpValid == 'true') {
+      Navigator.of(context).pushReplacementNamed('/inventories');
     } else {
-      showInSnackBar('Logging In..');
-      form.save();
-      await user.save();
-      await user.load();
-      if (user.ftpValid == 'true') {
-        Navigator.of(context).pushReplacementNamed('/inventories');
-      } else {
-        Navigator.of(context).pushReplacementNamed('/settings');
-      }
+      Navigator.of(context).pushReplacementNamed('/settings');
     }
-  }
-
-  String _validateEmail(String value) {
-    if (value.isEmpty)
-      return 'Workgroup is required';
-    return null;
-  }
-
-  String _validatePassword(String value) {
-    if (value.isEmpty)
-      return 'Password is required';
-    return null;
   }
 
   Image _loginLogo() {
@@ -61,9 +43,23 @@ class LoginState extends State<Login> {
     }
   }
 
+  Positioned _versionWidget() {
+    return Positioned( // red box
+      child: Text(
+        "v$_version",
+      ),
+      bottom: 24.0,
+      right: 24.0,
+    );
+  }
+
   void init() async {
     await user.load();
-    setState(() { _loadedInitials = true; });
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      _loadedInitials = true;
+      _version = packageInfo.version;
+    });
   }
 
   @override
@@ -75,64 +71,49 @@ class LoginState extends State<Login> {
       return new Scaffold(
           key: _scaffoldKey,
           appBar: new AppBar(title: new Text('Welcome to Maxanet')),
-          body: new SafeArea(
-            top: false,
-            bottom: false,
-            child: new Form(
-              key: _formKey,
-              child: new Container(
+          body: new Stack(
+            children: <Widget> [
+              new Container(
                 padding: new EdgeInsets.symmetric(horizontal: 30.0),
                 child: new Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     _loginLogo(),
-                    /*
-                    new TextFormField(
-                      decoration: const InputDecoration(
-                        icon: const Icon(Icons.group),
-                        hintText: 'Your WorkGroup',
-                        labelText: 'Your WorkGroup',
-                      ),
-                      initialValue: user.workgroup,
-                      keyboardType: TextInputType.url,
-                      onSaved: (String value) {
-                        user.workgroup = value.toLowerCase();
-                      },
-                      validator: _validateEmail,
+                    new Text(
+                      'Maxanet Uploader',
+                      style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)
                     ),
-                    new TextFormField(
-                      decoration: const InputDecoration(
-                        icon: const Icon(Icons.lock),
-                        hintText: 'Your Password',
-                        labelText: 'Password',
+                    new Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 20.0,
+                        horizontal: 30.0
                       ),
-                      initialValue: user.password,
-                      obscureText: true,
-                      onSaved: (String value) {
-                        user.password = value;
-                      },
-                      validator: _validatePassword,
+                      child: new Text(
+                        'Upload auction photos & item information quickly & easily from your mobile device or tablet',
+                        style: new TextStyle(fontSize: 16.0),
+                        textAlign: TextAlign.center,
+                      )
                     ),
-                    */
                     new Container(
                       padding: const EdgeInsets.all(20.0),
                       alignment: Alignment.center,
                       child: new RaisedButton(
-                        child: const Text('ENTER'),
-                        onPressed: _handleSubmitted,
+                        child: const Text('GET STARTED'),
+                        onPressed: _enter,
                       ),
                     ),
                   ],
                 ),
-              ),
             ),
-          )
+              _versionWidget(),
+            ],
+          ),
       );
     } else {
       return new Scaffold(
         key: _scaffoldKey,
-        appBar: new AppBar( title: new Text('Login to Maxanet')),
+        appBar: new AppBar( title: new Text('Welcome to Maxanet')),
         body: new Center( key: _formKey, child: new CircularProgressIndicator()),
       );
     }
