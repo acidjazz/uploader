@@ -56,7 +56,10 @@ class InventoryData {
   }
 
   String next () {
-    int index = int.parse(inventory.items.last.number);
+    int index = 1;
+    if (inventory.items.length > 0) {
+      index = int.parse(inventory.items.last.number);
+    }
     while (this.exists(index)) {
       index++;
     }
