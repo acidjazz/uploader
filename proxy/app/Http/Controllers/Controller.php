@@ -39,6 +39,42 @@ class Controller extends BaseController
 
   }
 
+  private function rotateToExif($image) {
+    switch ($image->getImageOrientation()) {
+      case Imagick::ORIENTATION_TOPLEFT:
+          break;
+      case Imagick::ORIENTATION_TOPRIGHT:
+          $image->flopImage();
+          break;
+      case Imagick::ORIENTATION_BOTTOMRIGHT:
+          $image->rotateImage("#000", 180);
+          break;
+      case Imagick::ORIENTATION_BOTTOMLEFT:
+          $image->flopImage();
+          $image->rotateImage("#000", 180);
+          break;
+      case Imagick::ORIENTATION_LEFTTOP:
+          $image->flopImage();
+          $image->rotateImage("#000", -90);
+          break;
+      case Imagick::ORIENTATION_RIGHTTOP:
+          $image->rotateImage("#000", 90);
+          break;
+      case Imagick::ORIENTATION_RIGHTBOTTOM:
+          $image->flopImage();
+          $image->rotateImage("#000", 90);
+          break;
+      case Imagick::ORIENTATION_LEFTBOTTOM:
+          $image->rotateImage("#000", -90);
+          break;
+      default: // Invalid orientation
+          break;
+    }
+    $image->setImageOrientation(Imagick::ORIENTATION_TOPLEFT);
+    return $image;
+
+  }
+
   function upload (Request $request) {
 
     if (isset($request->file)) {
@@ -53,13 +89,8 @@ class Controller extends BaseController
       } catch (\ImagickException $e) {
         return [$e->getCode() => $e->getMessage(), 'path' => $request->file->getRealPath()];
       }
-
+      $this->rotateToExif($image);
       $image->thumbnailImage(640, 480, true);
-
-      if ($image->getImageHeight() > $image->getImageWidth()) {
-        $image->imageRotate(90);
-      }
-
       $image->writeImage($tmpDir.$imageName);
 
       try {
@@ -67,17 +98,11 @@ class Controller extends BaseController
       } catch (\ImagickException $e) {
         return [$e->getCode() => $e->getMessage(), 'path' => $request->file->getRealPath()];
       }
+      $this->rotateToExif($image);
       $thumbnail->thumbnailImage(240, 240, true);
       $thumbnail->writeImage($tmpDir.$thumbnailName);
 
-      /*
-      header('Content-Type: image/jpeg');
-      $test = new \Imagick($tmpDir.$imageName);
-      echo $test->getImageBlob();
-      */
-
       $connection = ftp_connect($request->get('ftp-host'));
-
 
       ftp_login(
         $connection,
