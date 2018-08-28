@@ -53,7 +53,13 @@ class Controller extends BaseController
       } catch (\ImagickException $e) {
         return [$e->getCode() => $e->getMessage(), 'path' => $request->file->getRealPath()];
       }
+
       $image->thumbnailImage(640, 480, true);
+
+      if ($image->getImageHeight() > $image->getImageWidth()) {
+        $image->imageRotate(90);
+      }
+
       $image->writeImage($tmpDir.$imageName);
 
       try {
