@@ -41,36 +41,36 @@ class Controller extends BaseController
 
   private function rotateToExif($image) {
     switch ($image->getImageOrientation()) {
-      case Imagick::ORIENTATION_TOPLEFT:
+      case \Imagick::ORIENTATION_TOPLEFT:
           break;
-      case Imagick::ORIENTATION_TOPRIGHT:
+      case \Imagick::ORIENTATION_TOPRIGHT:
           $image->flopImage();
           break;
-      case Imagick::ORIENTATION_BOTTOMRIGHT:
+      case \Imagick::ORIENTATION_BOTTOMRIGHT:
           $image->rotateImage("#000", 180);
           break;
-      case Imagick::ORIENTATION_BOTTOMLEFT:
+      case \Imagick::ORIENTATION_BOTTOMLEFT:
           $image->flopImage();
           $image->rotateImage("#000", 180);
           break;
-      case Imagick::ORIENTATION_LEFTTOP:
+      case \Imagick::ORIENTATION_LEFTTOP:
           $image->flopImage();
           $image->rotateImage("#000", -90);
           break;
-      case Imagick::ORIENTATION_RIGHTTOP:
+      case \Imagick::ORIENTATION_RIGHTTOP:
           $image->rotateImage("#000", 90);
           break;
-      case Imagick::ORIENTATION_RIGHTBOTTOM:
+      case \Imagick::ORIENTATION_RIGHTBOTTOM:
           $image->flopImage();
           $image->rotateImage("#000", 90);
           break;
-      case Imagick::ORIENTATION_LEFTBOTTOM:
+      case \Imagick::ORIENTATION_LEFTBOTTOM:
           $image->rotateImage("#000", -90);
           break;
       default: // Invalid orientation
           break;
     }
-    $image->setImageOrientation(Imagick::ORIENTATION_TOPLEFT);
+    $image->setImageOrientation(\Imagick::ORIENTATION_TOPLEFT);
     return $image;
 
   }
