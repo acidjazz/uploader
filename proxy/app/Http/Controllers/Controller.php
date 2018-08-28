@@ -98,7 +98,7 @@ class Controller extends BaseController
       } catch (\ImagickException $e) {
         return [$e->getCode() => $e->getMessage(), 'path' => $request->file->getRealPath()];
       }
-      $this->rotateToExif($image);
+      $this->rotateToExif($thumbnail);
       $thumbnail->thumbnailImage(240, 240, true);
       $thumbnail->writeImage($tmpDir.$thumbnailName);
 
