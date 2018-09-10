@@ -25,8 +25,8 @@ android {
         applicationId "com.maxanet.uploader"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 17
-        versionName "1.1.4"
+        versionCode 18
+        versionName "1.1.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

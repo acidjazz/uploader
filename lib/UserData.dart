@@ -84,7 +84,7 @@ class UserData {
     // print('we are sending..');
 
     request.send().then((response) {
-      response.stream.transform(UTF8.decoder).listen((data) {
+      response.stream.transform(utf8.decoder).listen((data) {
         result(json.decode(data));
       });
     });

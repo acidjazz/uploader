@@ -149,7 +149,7 @@ class InventoryData {
     ));
 
     request.send().then((response) {
-      response.stream.transform(UTF8.decoder).listen((data) {
+      response.stream.transform(utf8.decoder).listen((data) {
         respond(data
           .replaceAll(new RegExp("<[^>]*>"), '')
           .replaceAll("\n", '')
@@ -290,7 +290,7 @@ class InventoryItemPhoto extends JsonDecoder {
 
     await request.send().then((response) {
 
-      response.stream.transform(UTF8.decoder).listen((data) {
+      response.stream.transform(utf8.decoder).listen((data) {
         this.url = json.decode(data)['imageName'];
         this.thumbnail = json.decode(data)['thumbnailName'];
       });
