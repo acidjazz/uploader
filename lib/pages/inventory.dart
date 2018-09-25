@@ -336,7 +336,7 @@ class InventoryState extends State<Inventory> {
 
         InventoryItemPhoto photo = item.photos[photoIndex];
 
-        await photo.upload(widget.name, '${itemIndex+1}-${photoIndex+1}');
+        await photo.upload(widget.name, '${item.number}-${photoIndex+1}');
         setState(() {
           item.progress = (photoIndex + 1) / item.photos.length;
         });
