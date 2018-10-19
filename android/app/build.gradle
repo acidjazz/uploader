@@ -23,7 +23,7 @@ android {
 
     defaultConfig {
         applicationId "com.maxanet.uploader"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 27
         versionCode 19
         versionName "1.1.6"

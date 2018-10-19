@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'dart:typed_data';
+// import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:maxanet_uploader/InventoriesData.dart';
@@ -28,6 +29,7 @@ class InventoryModify extends StatefulWidget {
 class InventoryModifyState extends State<InventoryModify> {
 
   File _image;
+  // List<Asset> _images;
 
   Mode get mode => widget.index == null ? Mode.Create : Mode.Edit;
   InventoryItem _item;
@@ -45,11 +47,15 @@ class InventoryModifyState extends State<InventoryModify> {
 
   addPhoto (ImageSource source) async {
 
+    /*
+     * image_picker library implementation
+     */
     _image = await ImagePicker.pickImage(source: source);
     if (_image == null) {
       showInSnackBar('Selection Canceled');
       return true;
     }
+    print(_image.uri.pathSegments.last);
     await _image.copy(inventory.path(_image.uri.pathSegments.last));
     setState(() {
       item.photos.add(new InventoryItemPhoto(_image.uri.pathSegments.last, '', ''));
@@ -58,7 +64,51 @@ class InventoryModifyState extends State<InventoryModify> {
       inventory.published = 'false';
     });
     await inventory.save(widget.name);
-    scrollPhotos();
+    if (item.photos.length > 0) {
+      scrollPhotos();
+    }
+
+    /*
+     * multi_image_picker library implementation
+     *
+    try {
+      _images = await MultiImagePicker.pickImages(
+        maxImages: 6,
+      );
+    } on Exception catch (message) {
+      print('We have a problem ' + message.toString());
+    }
+
+    if (_images.length == 0) {
+      showInSnackBar('Seletion Canceled');
+    }
+
+    _images.forEach( (Asset image) async {
+      await image.requestThumbnail(800, 800);
+      List _parts = image.identifier.split('/');
+      print(_parts.last);
+      print(image.thumbData);
+      print(inventory.path('what'));
+      File _file = await writeToFile(image.thumbData, inventory.path("${_parts.last}.jpg"));
+      print(_file);
+      _image.copy(inventory.path(_file.uri.pathSegments.last));
+      setState(() {
+        item.photos.add(new InventoryItemPhoto(_file.uri.pathSegments.last, '', ''));
+        item.uploaded = 'false';
+        inventory.uploaded = 'false';
+        inventory.published = 'false';
+      });
+      image.releaseThumb();
+    });
+    */
+
+
+  }
+
+  Future<File> writeToFile(ByteData data, String path) {
+    final buffer = data.buffer;
+    return new File(path).writeAsBytes(
+      buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 
   scrollPhotos () {
@@ -129,6 +179,21 @@ class InventoryModifyState extends State<InventoryModify> {
     await inventory.save(widget.name);
     Navigator.pop(context);
   }
+  Widget addPhotosButtons () {
+    return new Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        new GestureDetector(
+          onTap: () => addPhoto(ImageSource.gallery),
+          child: photoTypeWidget(Icons.add_photo_alternate, 'Add A Photo'),
+        ),
+        new GestureDetector(
+          onTap: () => addPhoto(ImageSource.camera),
+          child: photoTypeWidget(Icons.add_a_photo, 'Take a Photo'),
+        ),
+      ],
+    );
+  }
 
   Widget addPhotosWidget () {
     return new GridTile(
@@ -139,11 +204,11 @@ class InventoryModifyState extends State<InventoryModify> {
           children: [
             new GestureDetector(
               onTap: () => addPhoto(ImageSource.gallery),
-              child: photoTypeWidget(Icons.add_photo_alternate, 'Gallery Photo'),
+              child: photoTypeWidget(Icons.add_photo_alternate, 'Add A Photo'),
             ),
             new GestureDetector(
               onTap: () => addPhoto(ImageSource.camera),
-              child: photoTypeWidget(Icons.add_a_photo, 'Camera Photo'),
+              child: photoTypeWidget(Icons.add_a_photo, 'Take a Photo'),
             ),
           ],
         )
@@ -159,7 +224,7 @@ class InventoryModifyState extends State<InventoryModify> {
           color: Colors.blue,
           borderRadius: new BorderRadius.circular(10.0),
         ),
-        padding: new EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+        padding: new EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
         child: new Row(
           children: [
             new Icon(icon, size: 30.0, color: Colors.white),
@@ -195,7 +260,7 @@ class InventoryModifyState extends State<InventoryModify> {
         ),
       );
     }).toList();
-    photos.add(addPhotosWidget());
+    if (item.photos.length == 0) photos.add(addPhotosWidget());
     return photos;
   }
 
@@ -249,6 +314,8 @@ class InventoryModifyState extends State<InventoryModify> {
                 children: photosWidget()
               ),
             ),
+
+            item.photos.length != 0 ? addPhotosButtons() : new Column(),
 
             new Column(
               children: <Widget>[

@@ -56,7 +56,7 @@ packages:
       name: connectivity
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.1"
+    version: "0.3.2"
   convert:
     dependency: transitive
     description:
@@ -287,7 +287,7 @@ packages:
       name: petitparser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   plugin:
     dependency: transitive
     description:
@@ -322,7 +322,7 @@ packages:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.2"
+    version: "0.4.3"
   shelf:
     dependency: transitive
     description:
@@ -467,7 +467,7 @@ packages:
       name: xml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.1"
+    version: "3.2.3"
   yaml:
     dependency: transitive
     description:
@@ -476,5 +476,5 @@ packages:
     source: hosted
     version: "2.1.15"
 sdks:
-  dart: ">=2.0.0 <=2.1.0-dev.3.1.flutter-760a9690c2"
+  dart: ">=2.0.0 <=2.1.0-dev.5.0.flutter-a2eb050044"
   flutter: ">=0.1.4 <2.0.0"

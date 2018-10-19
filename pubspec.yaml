@@ -15,6 +15,7 @@ dev_dependencies:
   flutter_launcher_icons: ^0.6.1
   shared_preferences: ^0.4.2
   image_picker: ^0.4.10
+  # multi_image_picker: ^2.2.10
   connectivity: ^0.3.1
   image: ^2.0.4
   path_provider: ^0.4.1
