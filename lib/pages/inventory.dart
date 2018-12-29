@@ -134,7 +134,7 @@ class InventoryState extends State<Inventory> {
         child: new Stack(
           alignment: Alignment.center,
           overflow: Overflow.visible,
-          children: item.photos
+          children: item.thumbnails
               .getRange(0, item.photos.length > 2 ? 3 : item.photos.length)
               .toList()
               .reversed

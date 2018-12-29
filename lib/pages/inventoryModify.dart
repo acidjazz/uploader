@@ -80,7 +80,7 @@ class InventoryModifyState extends State<InventoryModify> {
     }
 
     if (_images.length == 0) {
-      showInSnackBar('Seletion Canceled');
+      showInSnackBar('Selection Canceled');
     }
 
     _images.forEach( (Asset image) async {
